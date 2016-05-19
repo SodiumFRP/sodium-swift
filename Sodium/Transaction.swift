@@ -1,0 +1,321 @@
+import Foundation
+
+typealias Block = () -> Void
+typealias Action = () throws -> Void
+typealias TV = (Transaction) throws -> Void
+typealias OTV = (Transaction?) throws -> Void
+
+let nop: Block = {}
+
+/**
+ # Transaction
+ A class for managing transactions.
+ */
+public final class Transaction
+{
+    // Coarse-grained lock that's held during the whole transaction.
+    private static let transactionLock = NSObject()
+    
+    private static var currentTransaction: Transaction?
+    private static var OnStartHooks = Array<Action>()
+    private static var runningOnStartHooks: Bool = false
+
+    private var entries = Set<Entry>()
+    private var lastQueue = Array<Action>()
+    private var postQueue = Dictionary<Int, OTV>()
+
+    private let prioritizedQueue = PriorityQueue<Entry>(comparator: >)
+    static var inCallback = 0
+    
+    // True if we need to re-generate the priority queue.
+    private var toRegen = false
+
+    init() {
+        print("Transaction()\n")
+    }
+    
+    /// - Returns: The current transaction as an option type.
+    internal static func getCurrentTransaction() -> Transaction?
+    {
+        objc_sync_enter(transactionLock)
+        defer { objc_sync_exit(transactionLock) }
+
+        return currentTransaction
+    }
+
+    /// - Returns: whether or not there is a current transaction.
+    internal static func hasCurrentTransaction() -> Bool
+    {
+        objc_sync_enter(transactionLock)
+        defer { objc_sync_exit(transactionLock) }
+
+        return currentTransaction != nil
+    }
+
+    /**
+     Execute the specified action inside a single transaction.
+     
+     - Parameter action: The action to execute.
+     
+     - Remarks: In most cases this is not needed, because all primitives will create their own transaction automatically.  It is useful for running multiple reactive operations atomically.
+     */
+    internal static func runVoid(action: Action) {
+        go { try action() }
+    }
+
+    public static func noThrowRun<T>(f: () -> T) -> T {
+        return go { f() }!
+    }
+    
+    /**
+     Execute the specified function inside a single transaction.
+
+     - Parameter T: The type of the value returned.
+     - Parameter f: The function to execute.
+     - Returns: The return value of `f`.
+     - Remarks: In most cases this is not needed, because all primitives will create their own transaction automatically. It is useful for running multiple reactive operations atomically.
+     */
+    public static func run<T>(f: () throws -> T) -> T?
+    {
+        return go { try f() }
+    }
+
+    internal static func run(code: TV) {
+        go( { try code(startIfNecessary())})
+    }
+
+    static func go<R>(code: () throws -> R) -> R? {
+        objc_sync_enter(transactionLock)
+        defer { objc_sync_exit(transactionLock) }
+        
+        
+        // If we are already inside a transaction (which must be on the same
+        // thread otherwise we wouldn't have acquired transactionLock), then
+        // keep using that same transaction.
+        let transWas = currentTransaction
+        startIfNecessary()
+        
+        defer
+        {
+            do
+            {
+                if (transWas == nil) {
+                    try currentTransaction?.close()
+                }
+            }
+            catch
+            {
+            }
+            currentTransaction = transWas
+        }
+
+        do
+        {
+            return try code()
+        }
+        catch
+        {
+        }
+        return nil
+    }
+
+    internal static func apply<T>(code: (Transaction) -> T) -> T {
+        return go { code(startIfNecessary()) }!
+    }
+
+    internal static func apply<T>(code: (Transaction) throws -> T) -> T? {
+        return go { try code(startIfNecessary()) }
+    }
+
+    /**
+     Add an action that will be executed whenever a transaction is started.
+
+     - Parameter action:
+     - Remarks: The action may start transactions itself, which will not cause the hooks to execute recursively.  The main use case of this is for the implementation of a time/alarm system.
+     */
+    internal static func onStart(action: Action) {
+        objc_sync_enter(transactionLock)
+        defer { objc_sync_exit(transactionLock) }
+
+        OnStartHooks.append(action)
+    }
+
+    private static func startIfNecessary() -> Transaction {
+        if (currentTransaction == nil) {
+            if (!runningOnStartHooks) {
+                runningOnStartHooks = true
+                do {
+                    for action in OnStartHooks {
+                        try action()
+                    }
+                }
+                catch {
+                }
+                runningOnStartHooks = false
+            }
+
+            currentTransaction = Transaction()
+        }
+        return currentTransaction!
+    }
+
+    internal func prioritized(rank: INode, action: TV, dbg: String = #function) {
+        let e = Entry(rank: rank, action: action, dbg: dbg)
+        self.prioritizedQueue.push(e)
+        self.entries.insert(e)
+    }
+
+    /**
+     Add an action to run after all prioritized actions.
+ 
+     - Parameter action: The action to run after all prioritized actions.
+    */
+    internal func last(action: Action) {
+        self.lastQueue.append(action)
+    }
+
+    /**
+     Add an action to run after all last actions.
+
+     - Parameter index: The order index in which to run the action.
+     - Parameter action: The action to run after all last actions.
+     */
+    internal func post(index: Int, action: OTV) {
+        // If an entry exists already, combine the old one with the new one.
+        var a = action
+        if let existing = self.postQueue[index] {
+            a = { trans in
+                try existing(trans)
+                try action(trans)
+            }
+        }
+
+        self.postQueue[index] = a
+    }
+
+    /**
+     Execute an action after the current transaction is closed or immediately if there is no current transaction.
+
+     - Parameter action: The action to run after the current transaction is closed or immediately if there is no current transaction.
+     */
+    internal static func post(action: OTV) {
+        // -1 will mean it runs before anything split/deferred, and will run outside a transaction context.
+        // TODO: make enum for post
+        self.run { trans in trans.post(-1, action: action) }
+    }
+
+    internal func setNeedsRegenerating() {
+        self.toRegen = true
+    }
+
+    /// If the priority queue has entries in it when we modify any of the nodes' ranks, then we need to re-generate it to make sure it's up-to-date.
+    private func checkRegen() {
+        if (self.toRegen) {
+            self.toRegen = false
+            self.prioritizedQueue.removeAll()
+            for e in self.entries {
+                self.prioritizedQueue.push(e)
+            }
+        }
+    }
+
+    internal func close() throws {
+        while true {
+            self.checkRegen()
+
+            if self.prioritizedQueue.isEmpty {
+                break
+            }
+
+            let e = self.prioritizedQueue.pop()
+            //print("Running \(e!.dbg)")
+            self.entries.remove(e!)
+            try e!.action(self)
+        }
+
+        for action in self.lastQueue {
+            try action()
+        }
+        self.lastQueue.removeAll()
+
+        for pair in self.postQueue {
+            let parent = Transaction.currentTransaction
+            
+            defer {
+                do {
+                    if (parent == nil) {
+                        try Transaction.currentTransaction?.close()
+                    }
+                }
+                catch {
+                }
+                Transaction.currentTransaction = parent
+            }
+
+            do
+            {
+                if (pair.0 < 0)
+                {
+                    Transaction.currentTransaction = nil
+                    try pair.1(nil)
+                }
+                else
+                {
+                    let transaction = Transaction()
+                    defer { do { try transaction.close() } catch {} }
+                    
+                    Transaction.currentTransaction = transaction
+                    do { try pair.1(transaction) } catch {}
+                }
+            }
+            catch {
+            }
+        }
+        self.postQueue.removeAll()
+    }
+
+    class Entry : Comparable, Hashable, CustomStringConvertible
+    {
+        let dbg: String
+        let rank: INode
+        let action: TV
+        let seq: Int64
+        
+        var hashValue: Int { return Int(seq) }
+
+        init(rank: INode, action: TV, dbg: String) {
+            self.rank = rank
+            self.action = action
+            self.dbg = dbg
+            self.seq = OSAtomicAdd64(1, &nextSeq)
+        }
+        
+        var description: String { return rank.rank.description }
+    }
+}
+
+func ==(lhs: Transaction.Entry, rhs: Transaction.Entry) -> Bool {
+    return lhs.rank == rhs.rank && lhs.seq == rhs.seq
+}
+func <(lhs: Transaction.Entry, rhs: Transaction.Entry) -> Bool {
+    if lhs.rank < rhs.rank { return true }
+    if lhs.rank == rhs.rank && lhs.seq < rhs.seq { return true }
+    return false
+}
+func <=(lhs: Transaction.Entry, rhs: Transaction.Entry) -> Bool {
+    if lhs.rank < rhs.rank { return true }
+    if lhs.rank == rhs.rank && lhs.seq <= rhs.seq { return true }
+    return false
+}
+func >=(lhs: Transaction.Entry, rhs: Transaction.Entry) -> Bool {
+    if lhs.rank > rhs.rank { return true }
+    if lhs.rank == rhs.rank && lhs.seq >= rhs.seq { return true }
+    return false
+}
+func >(lhs: Transaction.Entry, rhs: Transaction.Entry) -> Bool {
+    if lhs.rank > rhs.rank { return true }
+    if lhs.rank == rhs.rank && lhs.seq > rhs.seq { return true }
+    return false
+}
+
+var nextSeq = Int64(0)
