@@ -12,7 +12,7 @@ public class LazyCell<T> : CellType
         self.LazyInitialValue = Lazy<T>(f: initialValue)
         self._stream = stream
         self.cleanup = Transaction.apply{ trans1 in
-            self._stream.listen(Node<T>.Null, trans: trans1, action: { (trans2, a, dbg) in
+            self._stream.listen(Node<T>.Null, trans: trans1, action: { (trans2, a) in
                 if self._valueUpdate == nil {
                     trans2.last({
                         self._value = self._valueUpdate!
@@ -29,7 +29,7 @@ public class LazyCell<T> : CellType
         self.LazyInitialValue = Lazy<T>(f: lazyInitialValue)
         self._stream = stream
         self.cleanup = Transaction.apply{ trans1 in
-            self._stream.listen(Node<T>.Null, trans: trans1, action: { (trans2, a, dbg) in
+            self._stream.listen(Node<T>.Null, trans: trans1, action: { (trans2, a) in
                 if self._valueUpdate == nil {
                     trans2.last({
                         self._value = self._valueUpdate!
@@ -46,7 +46,7 @@ public class LazyCell<T> : CellType
         self.LazyInitialValue = lazyInitialValue
         self._stream = stream
         self.cleanup = Transaction.apply{ trans1 in
-            self._stream.listen(Node<T>.Null, trans: trans1, action: { (trans2, a, dbg) in
+            self._stream.listen(Node<T>.Null, trans: trans1, action: { (trans2, a) in
                 if self._valueUpdate == nil {
                     trans2.last({
                         self._value = self._valueUpdate!

@@ -62,7 +62,7 @@ func >(lhs: INode, rhs: INode) -> Bool {
 
 internal class Node<T> : INode
 {
-    typealias Action = (Transaction, T, String) -> Void
+    typealias Action = (Transaction, T) -> Void
     
     private var listeners = Array<NodeTarget<T>>()
 
@@ -121,7 +121,7 @@ internal class Node<T> : INode
 /// Note: Swift won't do internal classes for generic classes.
 class NodeTarget<T> : INode.Target
 {
-    typealias Action = (Transaction, T, String) -> Void
+    typealias Action = (Transaction, T) -> Void
     
     internal var action: Action
     

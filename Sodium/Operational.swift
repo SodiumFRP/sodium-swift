@@ -47,7 +47,7 @@ class Operational
     static func split<T, S: SequenceType where S.Generator.Element == T>(s: Stream<S>) -> Stream<T>
     {
         let out = Stream<T>(keepListenersAlive: s.keepListenersAlive)
-        let l1 = s.listen(out.node, action: { (trans, aa, dbg) in
+        let l1 = s.listen(out.node, action: { (trans, aa) in
             var childIx = 0
             for a in aa {
                 trans.post(childIx, action: { trans1 in out.send(trans1!, a: a) })

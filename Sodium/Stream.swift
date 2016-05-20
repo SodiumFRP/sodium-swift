@@ -7,8 +7,8 @@ import Foundation
  */
 public class Stream<T>
 {
-    typealias TV = (T) -> Void
-    typealias Action = (Transaction, T, String) -> Void
+    public typealias Handler = T -> Void
+    typealias Action = (Transaction, T) -> Void
     
     internal let node: Node<T>
     private var disposables: Array<Listener>
@@ -57,7 +57,7 @@ public class Stream<T>
      
      To ensure this `Listener` is disposed as soon as the stream it is listening to is either disposed, pass the returned listener to this stream's `AddCleanup` method.
      */
-    public func listen(handler: (T)->Void) -> Listener
+    public func listen(handler: Handler) -> Listener
     {
         var innerListener = self.listenWeak(handler)
         var ls = [Listener]()
@@ -95,8 +95,8 @@ public class Stream<T>
      
      To ensure this `Listener` is disposed as soon as the stream it is listening to is either disposed, pass the returned listener to this stream's `AddCleanup` method.
      */
-    func listenWeak(handler: TV) -> Listener {
-        return self.listen(INode.Null, action: {(trans2, a, dbg) in
+    func listenWeak(handler: Handler) -> Listener {
+        return self.listen(INode.Null, action: {(trans2, a) in
             
             // T could really be U? so make sure we have a value using reflection
             let ref = Mirror(reflecting: a)
@@ -198,7 +198,7 @@ public class Stream<T>
                     Transaction.inCallback += 1
                     defer { Transaction.inCallback -= 1 }
                     // Don't allow transactions to interfere with Sodium internals.
-                    action(trans2, a, #function)
+                    action(trans2, a)
                 }
             }
         }
@@ -216,7 +216,7 @@ public class Stream<T>
     public func map<TResult>(f: (T) -> TResult) -> Stream<TResult>
     {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
-        let l = self.listen(out.node, action: { (trans2, a, dbg) in out.send(trans2, a: f(a), dbg: "Stream:map " + dbg) } )
+        let l = self.listen(out.node, action: { (trans2, a) in out.send(trans2, a: f(a)) } )
         return out.unsafeAddCleanup(l)
     }
 
@@ -243,19 +243,15 @@ public class Stream<T>
         return Transaction.apply{trans in Cell<T>(stream: self, initialValue: initialValue) }
     }
 
+    /**
+     Create a cell with the specified lazily initialized initial value, that is updated by this stream's values.
+     
+     - Parameter initialValue: The lazily initialized initial value of the cell.
+     - Returns: A cell with the specified lazily initialized initial value, that is updated by this stream's values.
+     */
     public func holdLazy(initialValue: () -> T) -> AnyCell<T> {
         return Transaction.apply {trans in self.holdLazy(trans, initialValue: initialValue)}
     }
-
-    /**
-     Create a cell with the specified lazily initialized initial value, that is updated by this stream's values.
- 
-     - Parameter initialValue: The lazily initialized initial value of the cell.
-     - Returns: A cell with the specified lazily initialized initial value, that is updated by this stream's values.
-    */
-//    public func holdLazy(@autoclosure(escaping) autoInitialValue: () -> T) -> Cell<T> {
-//        return Transaction.Apply {trans in self.HoldLazy(trans, initialValue: autoInitialValue)}
-//    }
 
     internal func holdLazy(trans: Transaction, lazy: Lazy<T>) -> AnyCell<T> {
         return AnyCell<T>(LazyCell<T>(stream: self, lazyInitialValue: lazy))
@@ -288,8 +284,8 @@ public class Stream<T>
      */
     public func snapshot<T1, TResult, C1 : CellType where C1.Element==T1>(c: C1, f: (T, T1) -> TResult) -> Stream<TResult> {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
-        let l = self.listen(out.node, action: { (trans2, a, dbg) in
-            out.send(trans2, a: f(a, c.sampleNoTransaction()), dbg: stack(dbg))
+        let l = self.listen(out.node, action: { (trans2, a) in
+            out.send(trans2, a: f(a, c.sampleNoTransaction()))
         })
         return out.unsafeAddCleanup(l)
     }
@@ -307,7 +303,7 @@ public class Stream<T>
      */
     public func snapshot<T1, T2, TResult>(c1: Cell<T1>, c2: Cell<T2>, f: (T, T1, T2) -> TResult) -> Stream<TResult> {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
-        let l = self.listen(out.node, action: { (trans2, a, dbg) in out.send(trans2, a: f(a, c1.sampleNoTransaction(), c2.sampleNoTransaction()))} )
+        let l = self.listen(out.node, action: { (trans2, a) in out.send(trans2, a: f(a, c1.sampleNoTransaction(), c2.sampleNoTransaction()))} )
         return out.unsafeAddCleanup(l)
     }
 
@@ -326,7 +322,7 @@ public class Stream<T>
      */
     public func snapshot<T1, T2, T3, TResult>(c1: Cell<T1>, c2: Cell<T2>, c3: Cell<T3>, f: (T, T1, T2, T3) -> TResult) -> Stream<TResult> {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
-        let l = self.listen(out.node, action: { (trans2, a, dbg) in out.send(trans2, a: f(a, c1.sampleNoTransaction(), c2.sampleNoTransaction(), c3.sampleNoTransaction()), dbg: stack(dbg))} )
+        let l = self.listen(out.node, action: { (trans2, a) in out.send(trans2, a: f(a, c1.sampleNoTransaction(), c2.sampleNoTransaction(), c3.sampleNoTransaction()))} )
         return out.unsafeAddCleanup(l)
     }
 
@@ -347,7 +343,7 @@ public class Stream<T>
      */
     public func snapshot<T1, T2, T3, T4, TResult>(c1: Cell<T1>, c2: Cell<T2>, c3: Cell<T3>, c4: Cell<T4>, f: (T, T1, T2, T3, T4) -> TResult) -> Stream<TResult> {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
-        let l = self.listen(out.node, action: { (trans2, a, dbg) in out.send(trans2, a: f(a, c1.sampleNoTransaction(), c2.sampleNoTransaction(), c3.sampleNoTransaction(), c4.sampleNoTransaction()))} )
+        let l = self.listen(out.node, action: { (trans2, a) in out.send(trans2, a: f(a, c1.sampleNoTransaction(), c2.sampleNoTransaction(), c3.sampleNoTransaction(), c4.sampleNoTransaction()))} )
         return out.unsafeAddCleanup(l)
     }
 
@@ -370,7 +366,7 @@ public class Stream<T>
         let out = Stream<T>(keepListenersAlive: self.keepListenersAlive)
         let left = Node<T>(rank: 0)
         let right = out.node
-        let nodeTargets = [left.link( { (t, v, dbg) in }, target: right).1]
+        let nodeTargets = [left.link( { (t, v) in }, target: right).1]
         let nodeTarget = nodeTargets.first!
         let h = out.send
         let l1 = self.listen(left, action: h)
@@ -418,7 +414,7 @@ public class Stream<T>
     */
     public func filter(predicate: (T)->Bool) -> Stream<T> {
         let out = Stream<T>(keepListenersAlive: self.keepListenersAlive)
-        let l = self.listen(out.node, action: { (trans2, a, dbg) in
+        let l = self.listen(out.node, action: { (trans2, a) in
             if (predicate(a))
             {
                 out.send(trans2, a: a)
@@ -541,7 +537,7 @@ public func calm() -> Stream<T> {
         let out = Stream<T>(keepListenersAlive: self.keepListenersAlive)
         var ls = [Listener]()
 
-        ls.append(self.listen(out.node, action: { (trans, a, dbg) in
+        ls.append(self.listen(out.node, action: { (trans, a) in
             out.send(trans, a: a)
             ls.first!.unlisten()
         }))
@@ -573,7 +569,7 @@ public func calm() -> Stream<T> {
         return self
     }
 
-    func send(trans: Transaction, a: T, dbg: String = #function)
+    func send(trans: Transaction, a: T)
     {
         if (self.firings.isEmpty)
         {
@@ -589,7 +585,7 @@ public func calm() -> Stream<T> {
                 // Don't allow transactions to interfere with Sodium internals.
                 // Dereference the weak reference
                 // If it hasn't been garbage collected, call it.
-                target.action(trans2, a, "Stream:send() mux") //stack(dbg))
+                target.action(trans2, a)
                 //}
                 //else
                 //{
@@ -603,18 +599,15 @@ public func calm() -> Stream<T> {
 
 class ListenerImplementation<T> : Listener
 {
-    typealias ACTION = (Transaction, T, String) -> Void
-    // It's essential that we keep the action alive, since the node uses
-    // a weak reference.
-    // ReSharper disable once NotAccessedField.Local
-    private let action: ACTION
-    // It's essential that we keep the listener alive while the caller holds
-    // the Listener, so that the garbage collector doesn't get triggered.
+    typealias Action = (Transaction, T) -> Void
+    // It's essential that we keep the action alive, since the node uses a weak reference.
+    private let action: Action
+    // It's essential that we keep the listener alive while the caller holds the Listener, so that the garbage collector doesn't get triggered.
     private let stream: Stream<T>
     
     private let target: NodeTarget<T>
     
-    init(stream: Stream<T>, action: ACTION, target: NodeTarget<T>) {
+    init(stream: Stream<T>, action: Action, target: NodeTarget<T>) {
         self.stream = stream
         self.action = action
         self.target = target
@@ -643,8 +636,4 @@ private class KeepListenersAliveImplementation : IKeepListenersAlive
     func use(childKeepListenersAlive: IKeepListenersAlive) {
         self.childKeepListenersAliveList.append(childKeepListenersAlive)
     }
-}
-
-func stack(dbg: String, f: String = #function) -> String {
-    return dbg + ":" + f
 }

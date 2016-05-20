@@ -5,7 +5,7 @@
  */
 public class StreamSink<T> : Stream<T>
 {
-    typealias Action = (Transaction, T, String) -> Void
+    typealias Action = (Transaction, T) -> Void
     
     private var coalescer: Action?
     private let fold: (T,T)->T
@@ -42,7 +42,7 @@ public class StreamSink<T> : Stream<T>
             if (Transaction.inCallback > 0) {
                 fatalError("Send() may not be called inside a Sodium callback.")
             }
-            self.coalescer!(trans, a, #function)
+            self.coalescer!(trans, a)
         })
     }
 }

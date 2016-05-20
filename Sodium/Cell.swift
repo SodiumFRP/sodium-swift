@@ -237,7 +237,7 @@ public class Cell<T>: CellBase<T> {
     
     private func doListen() -> Listener {
         return Transaction.apply { trans1 in
-            self._stream.listen(Node<T>.Null, trans: trans1, action: { (trans2, a, dbg) in
+            self._stream.listen(Node<T>.Null, trans: trans1, action: { (trans2, a) in
                 if self._valueUpdate == nil {
                     trans2.last({
                         self._value = self._valueUpdate!
@@ -255,7 +255,8 @@ public class Cell<T>: CellBase<T> {
 }
 
 extension CellType {
-   
+    public typealias Handler = Element -> Void
+    
     /**
      Lift a binary function into cells, so the returned Cell always reflects the specified function applied to the input cells' values.
      
@@ -365,7 +366,7 @@ extension CellType {
             
             let outTarget = out.node
             let inTarget = Node<TResult>(rank: 0)
-            let nodeTarget = inTarget.link({ (t, v, dbg) in }, target: outTarget).1
+            let nodeTarget = inTarget.link({ _,_ in }, target: outTarget).1
             
             var f: ((Element)->TResult)?
             var a: Element?
@@ -373,13 +374,13 @@ extension CellType {
             let h = { (trans1: Transaction) -> Void in
                 trans1.prioritized(out.node as INode) { trans2 throws -> Void in out.send(trans2, a: f!(a!))}}
             
-            let l1 = bf.value(trans0).listen(inTarget, action: {(trans1, ff, dbg) in
+            let l1 = bf.value(trans0).listen(inTarget, action: {(trans1, ff) in
                 f = ff
                 if a != nil {
                     h(trans1)
                 }
             })
-            let l2 = self.value(trans0).listen(inTarget, action: { (trans1, aa, dbg) in
+            let l2 = self.value(trans0).listen(inTarget, action: { (trans1, aa) in
                 a = aa
                 if f != nil {
                     h(trans1)
@@ -403,7 +404,7 @@ extension CellType {
      If the Listener is not disposed, it will continue to listen until this cell is disposed.
      */
   
-    public func listen(handler: (Element) -> Void) -> Listener {
+    public func listen(handler: Handler) -> Listener {
         return Transaction.apply{trans in self.value(trans).listen(handler)}!
     }
 
