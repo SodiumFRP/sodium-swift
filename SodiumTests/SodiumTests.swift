@@ -399,9 +399,9 @@ class SodiumTests: XCTestCase {
         var calledBack = [Bool](arrayLiteral: false)
         
         Transaction.run{ trans in
-            trans.prioritized(INode.Null, action: { trans2 in
+            trans.prioritized(INode.Null) { trans2 in
                 calledBack[0] = true
-            }, dbg: "test")
+            }
         }
 
         XCTAssert(true == calledBack[0], "testTransaction() failed")

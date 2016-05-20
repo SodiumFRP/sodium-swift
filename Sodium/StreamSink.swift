@@ -14,7 +14,6 @@ public class StreamSink<T> : Stream<T>
     internal convenience override init()
     {
         self.init(fold: { (left, right) in fatalError("Send was called more than once in a transaction, which isn't allowed.  To combine the streams, pass a coalescing function to the StreamSink constructor.")
-    
             return right
         })
     }

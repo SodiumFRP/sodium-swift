@@ -159,8 +159,8 @@ public final class Transaction
         return currentTransaction!
     }
 
-    internal func prioritized(rank: INode, action: TV, dbg: String = #function) {
-        let e = Entry(rank: rank, action: action, dbg: dbg)
+    internal func prioritized(rank: INode, action: TV) {
+        let e = Entry(rank: rank, action: action)
         self.prioritizedQueue.push(e)
         self.entries.insert(e)
     }
@@ -228,7 +228,6 @@ public final class Transaction
             }
 
             let e = self.prioritizedQueue.pop()
-            //print("Running \(e!.dbg)")
             self.entries.remove(e!)
             try e!.action(self)
         }
@@ -276,17 +275,15 @@ public final class Transaction
 
     class Entry : Comparable, Hashable, CustomStringConvertible
     {
-        let dbg: String
         let rank: INode
         let action: TV
         let seq: Int64
         
         var hashValue: Int { return Int(seq) }
 
-        init(rank: INode, action: TV, dbg: String) {
+        init(rank: INode, action: TV) {
             self.rank = rank
             self.action = action
-            self.dbg = dbg
             self.seq = OSAtomicAdd64(1, &nextSeq)
         }
         

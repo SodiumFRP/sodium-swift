@@ -10,10 +10,10 @@ internal class CoalesceHandler<T>
                 self.accum = f(acc, a)
             }
             else {
-                trans1.prioritized(out.node, action: { trans2 in
+                trans1.prioritized(out.node) { trans2 in
                     out.send(trans2, a: self.accum!, dbg: "\(self.accum!)")
                     self.accum = nil
-                }, dbg: stack(dbg))
+                }
                 self.accum = a
             }
         }

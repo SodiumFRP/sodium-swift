@@ -371,7 +371,7 @@ extension CellType {
             var a: Element?
             
             let h = { (trans1: Transaction) -> Void in
-                trans1.prioritized(out.node as INode, action: { trans2 throws -> Void in out.send(trans2, a: f!(a!))}, dbg: "Cell<>.apply()" )}
+                trans1.prioritized(out.node as INode) { trans2 throws -> Void in out.send(trans2, a: f!(a!))}}
             
             let l1 = bf.value(trans0).listen(inTarget, action: {(trans1, ff, dbg) in
                 f = ff
@@ -425,7 +425,7 @@ extension CellType {
     
     public func value(trans1: Transaction) -> Stream<Element> {
         let spark = Stream<Unit>(keepListenersAlive: self.stream().keepListenersAlive)
-        trans1.prioritized(spark.node, action: { trans2 in spark.send(trans2, a: Unit.value)}, dbg: "Cell.value()")
+        trans1.prioritized(spark.node) { trans2 in spark.send(trans2, a: Unit.value)}
         let initial = spark.snapshot(self)
         //return initial.merge(self.updates(trans1), f: { $1 })
         return initial.merge(self.stream(), f: { $1 })

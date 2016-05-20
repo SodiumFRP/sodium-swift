@@ -191,7 +191,7 @@ public class Stream<T>
         let firings = self.firings
         if (!suppressEarlierFirings && !firings.isEmpty)
         {
-            trans.prioritized(target, action: { trans2 in
+            trans.prioritized(target) { trans2 in
                 // Anything sent already in this transaction must be sent now so that
                 // there's no order dependency between send and listen.
                 for a in firings {
@@ -200,7 +200,7 @@ public class Stream<T>
                     // Don't allow transactions to interfere with Sodium internals.
                     action(trans2, a, #function)
                 }
-            }, dbg: "Stream<>.listen")
+            }
         }
         return ListenerImplementation(stream: self, action: action, target: nodeTarget)
     }
@@ -583,7 +583,7 @@ public func calm() -> Stream<T> {
 
         let targets = Set<NodeTarget<T>>(self.node.getListeners())
         for target in targets {
-            trans.prioritized(target.node, action: { trans2 in
+            trans.prioritized(target.node) { trans2 in
                 Transaction.inCallback += 1
                 defer { Transaction.inCallback -= 1 }
                 // Don't allow transactions to interfere with Sodium internals.
@@ -596,7 +596,7 @@ public func calm() -> Stream<T> {
                     // If it has been garbage collected, remove it.
                 //    self.node.RemoveListener(target)
                 //}
-            }, dbg: stack(dbg))
+            }
         }
     }
 }
