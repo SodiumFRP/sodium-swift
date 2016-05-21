@@ -12,7 +12,7 @@ public class CellSink<T> : Cell<T>
 
     - Parameter initialValue: The initial value of the cell.
     */
-    convenience init(_ initialValue: T)
+    public convenience init(_ initialValue: T)
     {
         self.init(streamSink: StreamSink<T>(), initialValue: initialValue)
     }

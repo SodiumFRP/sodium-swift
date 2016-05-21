@@ -24,8 +24,11 @@ public class Stream<T>
     */
     public static func never() -> Stream<T> { return Stream<T>() }
 
-    init()
-    {
+    deinit {
+        print("Stream<> deinit")
+    }
+    
+    public init() {
         self.keepListenersAlive = KeepListenersAliveImplementation()
         self.node = Node<T>(rank: 0)
         self.disposables = []
@@ -63,14 +66,14 @@ public class Stream<T>
         var ls = [Listener]()
         
         ls.append(Listener(
-            unlisten: {
-                objc_sync_enter(self.lock)
-                defer { objc_sync_exit(self.lock) }
+            unlisten: { [weak self, weak innerListener] in
+                objc_sync_enter(self!.lock)
+                defer { objc_sync_exit(self!.lock) }
 
-                innerListener.unlisten()
+                innerListener!.unlisten()
 
                 if (ls.first != nil) {
-                    self.keepListenersAlive.stopKeepingListenerAlive(ls.first!)
+                    self!.keepListenersAlive.stopKeepingListenerAlive(ls.first!)
                 }
             })
         )
@@ -216,7 +219,7 @@ public class Stream<T>
     public func map<TResult>(f: (T) -> TResult) -> Stream<TResult>
     {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
-        let l = self.listen(out.node, action: { (trans2, a) in out.send(trans2, a: f(a)) } )
+        let l = self.listen(out.node, action: { [weak out] (trans2, a) in out!.send(trans2, a: f(a)) } )
         return out.unsafeAddCleanup(l)
     }
 

@@ -31,7 +31,6 @@ public final class Transaction
     private var toRegen = false
 
     init() {
-        print("Transaction()\n")
     }
     
     /// - Returns: The current transaction as an option type.

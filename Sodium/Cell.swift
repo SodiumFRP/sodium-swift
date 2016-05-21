@@ -225,31 +225,32 @@ private class LazySample<C:CellType>
 public class Cell<T>: CellBase<T> {
     private var cleanup: Listener = Listener(unlisten: nop)
 
-    internal override init(value: T) {
+    public override init(value: T) {
         super.init (value: value)
         self.cleanup = doListen()
     }
 
-    internal override init(stream: Stream<T>, initialValue: T) {
+    public override init(stream: Stream<T>, initialValue: T) {
         super.init(stream: stream, initialValue: initialValue)
         self.cleanup = doListen()
     }
     
     private func doListen() -> Listener {
         return Transaction.apply { trans1 in
-            self._stream.listen(Node<T>.Null, trans: trans1, action: { (trans2, a) in
-                if self._valueUpdate == nil {
+            self._stream.listen(Node<T>.Null, trans: trans1, action: { [weak self] (trans2, a) in
+                if self!._valueUpdate == nil {
                     trans2.last({
-                        self._value = self._valueUpdate!
-                        self._valueUpdate = nil
+                        self!._value = self!._valueUpdate!
+                        self!._valueUpdate = nil
                     })
                 }
-                self._valueUpdate = a
+                self!._valueUpdate = a
                 }, suppressEarlierFirings: false)
         }
     }
     
     deinit {
+        print("Cell<> deinit")
         self.cleanup.unlisten()
     }
 }

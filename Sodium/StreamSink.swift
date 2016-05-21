@@ -7,11 +7,11 @@ public class StreamSink<T> : Stream<T>
 {
     typealias Action = (Transaction, T) -> Void
     
-    private var coalescer: Action?
+    private var coalescer: Action = { _,_ in }
     private let fold: (T,T)->T
    
     /// Construct a StreamSink that uses the last value if `Send` is called more than once per transaction.
-    internal convenience override init()
+    public convenience override init()
     {
         self.init(fold: { (left, right) in fatalError("Send was called more than once in a transaction, which isn't allowed.  To combine the streams, pass a coalescing function to the StreamSink constructor.")
             return right
@@ -42,7 +42,7 @@ public class StreamSink<T> : Stream<T>
             if (Transaction.inCallback > 0) {
                 fatalError("Send() may not be called inside a Sodium callback.")
             }
-            self.coalescer!(trans, a)
+            self.coalescer(trans, a)
         })
     }
 }

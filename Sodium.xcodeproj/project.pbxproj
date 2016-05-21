@@ -31,11 +31,42 @@
 		05B469B51CD84FB400166473 /* Array-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B469B41CD84FB400166473 /* Array-Extension.swift */; };
 		05DB911C1CEE7923006A7678 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 05DB911B1CEE7923006A7678 /* COPYING */; };
 		05DB911D1CEE7AA3006A7678 /* CellLoop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055B91E81CD140150048BC24 /* CellLoop.swift */; };
+		05E3C6C81CEFBD1B00BAFE1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6C71CEFBD1B00BAFE1D /* AppDelegate.swift */; };
+		05E3C6CA1CEFBD1B00BAFE1D /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6C91CEFBD1B00BAFE1D /* FirstViewController.swift */; };
+		05E3C6CC1CEFBD1B00BAFE1D /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6CB1CEFBD1B00BAFE1D /* SecondViewController.swift */; };
+		05E3C6CF1CEFBD1B00BAFE1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05E3C6CD1CEFBD1B00BAFE1D /* Main.storyboard */; };
+		05E3C6D11CEFBD1B00BAFE1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05E3C6D01CEFBD1B00BAFE1D /* Assets.xcassets */; };
+		05E3C6D41CEFBD1B00BAFE1D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05E3C6D21CEFBD1B00BAFE1D /* LaunchScreen.storyboard */; };
+		05E3C6E11CEFBDBB00BAFE1D /* SodiumCocoa.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E3C6E01CEFBDBB00BAFE1D /* SodiumCocoa.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		05E3C6E71CEFBDE400BAFE1D /* NATextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6E61CEFBDE400BAFE1D /* NATextField.swift */; };
+		05E3C6E91CEFC1E600BAFE1D /* NAButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6E81CEFC1E600BAFE1D /* NAButton.swift */; };
+		05E3C6F11CEFD26A00BAFE1D /* Example2.1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6F01CEFD26A00BAFE1D /* Example2.1.swift */; };
 		05FE4C071CDD0C3B00108F68 /* StreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FE4C061CDD0C3B00108F68 /* StreamTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		055B91D71CD13D950048BC24 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 055B91C21CD13D940048BC24 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 055B91CA1CD13D940048BC24;
+			remoteInfo = Sodium;
+		};
+		05E3C6EA1CEFC2CF00BAFE1D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 055B91C21CD13D940048BC24 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 055B91CA1CD13D940048BC24;
+			remoteInfo = Sodium;
+		};
+		05E3C6EC1CEFC2D500BAFE1D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 055B91C21CD13D940048BC24 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05E3C6DD1CEFBDBB00BAFE1D;
+			remoteInfo = SodiumCocoa;
+		};
+		05E3C6EE1CEFC89E00BAFE1D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 055B91C21CD13D940048BC24 /* Project object */;
 			proxyType = 1;
@@ -71,6 +102,20 @@
 		057C5C731CDA76DC0013C3E3 /* Lazy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lazy.swift; sourceTree = "<group>"; };
 		05B469B41CD84FB400166473 /* Array-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array-Extension.swift"; sourceTree = "<group>"; };
 		05DB911B1CEE7923006A7678 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		05E3C6C51CEFBD1B00BAFE1D /* SodiumExamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SodiumExamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		05E3C6C71CEFBD1B00BAFE1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		05E3C6C91CEFBD1B00BAFE1D /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
+		05E3C6CB1CEFBD1B00BAFE1D /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		05E3C6CE1CEFBD1B00BAFE1D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		05E3C6D01CEFBD1B00BAFE1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		05E3C6D31CEFBD1B00BAFE1D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		05E3C6D51CEFBD1B00BAFE1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		05E3C6DE1CEFBDBB00BAFE1D /* SodiumCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SodiumCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		05E3C6E01CEFBDBB00BAFE1D /* SodiumCocoa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SodiumCocoa.h; sourceTree = "<group>"; };
+		05E3C6E21CEFBDBB00BAFE1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		05E3C6E61CEFBDE400BAFE1D /* NATextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NATextField.swift; sourceTree = "<group>"; };
+		05E3C6E81CEFC1E600BAFE1D /* NAButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NAButton.swift; sourceTree = "<group>"; };
+		05E3C6F01CEFD26A00BAFE1D /* Example2.1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example2.1.swift; sourceTree = "<group>"; };
 		05FE4C061CDD0C3B00108F68 /* StreamTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,6 +135,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		05E3C6C21CEFBD1B00BAFE1D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05E3C6DA1CEFBDBB00BAFE1D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -98,6 +157,8 @@
 			children = (
 				055B91CD1CD13D940048BC24 /* Sodium */,
 				055B91D91CD13D950048BC24 /* SodiumTests */,
+				05E3C6C61CEFBD1B00BAFE1D /* SodiumExamples */,
+				05E3C6DF1CEFBDBB00BAFE1D /* SodiumCocoa */,
 				055B91CC1CD13D940048BC24 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -107,6 +168,8 @@
 			children = (
 				055B91CB1CD13D940048BC24 /* Sodium.framework */,
 				055B91D51CD13D950048BC24 /* SodiumTests.xctest */,
+				05E3C6C51CEFBD1B00BAFE1D /* SodiumExamples.app */,
+				05E3C6DE1CEFBDBB00BAFE1D /* SodiumCocoa.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -158,6 +221,32 @@
 			name = Common;
 			sourceTree = "<group>";
 		};
+		05E3C6C61CEFBD1B00BAFE1D /* SodiumExamples */ = {
+			isa = PBXGroup;
+			children = (
+				05E3C6C71CEFBD1B00BAFE1D /* AppDelegate.swift */,
+				05E3C6C91CEFBD1B00BAFE1D /* FirstViewController.swift */,
+				05E3C6CB1CEFBD1B00BAFE1D /* SecondViewController.swift */,
+				05E3C6CD1CEFBD1B00BAFE1D /* Main.storyboard */,
+				05E3C6D01CEFBD1B00BAFE1D /* Assets.xcassets */,
+				05E3C6D21CEFBD1B00BAFE1D /* LaunchScreen.storyboard */,
+				05E3C6D51CEFBD1B00BAFE1D /* Info.plist */,
+				05E3C6F01CEFD26A00BAFE1D /* Example2.1.swift */,
+			);
+			path = SodiumExamples;
+			sourceTree = "<group>";
+		};
+		05E3C6DF1CEFBDBB00BAFE1D /* SodiumCocoa */ = {
+			isa = PBXGroup;
+			children = (
+				05E3C6E01CEFBDBB00BAFE1D /* SodiumCocoa.h */,
+				05E3C6E21CEFBDBB00BAFE1D /* Info.plist */,
+				05E3C6E61CEFBDE400BAFE1D /* NATextField.swift */,
+				05E3C6E81CEFC1E600BAFE1D /* NAButton.swift */,
+			);
+			path = SodiumCocoa;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -165,6 +254,14 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05E3C6DB1CEFBDBB00BAFE1D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05E3C6E11CEFBDBB00BAFE1D /* SodiumCocoa.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,13 +304,51 @@
 			productReference = 055B91D51CD13D950048BC24 /* SodiumTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		05E3C6C41CEFBD1B00BAFE1D /* SodiumExamples */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05E3C6D81CEFBD1B00BAFE1D /* Build configuration list for PBXNativeTarget "SodiumExamples" */;
+			buildPhases = (
+				05E3C6C11CEFBD1B00BAFE1D /* Sources */,
+				05E3C6C21CEFBD1B00BAFE1D /* Frameworks */,
+				05E3C6C31CEFBD1B00BAFE1D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				05E3C6EF1CEFC89E00BAFE1D /* PBXTargetDependency */,
+				05E3C6ED1CEFC2D500BAFE1D /* PBXTargetDependency */,
+			);
+			name = SodiumExamples;
+			productName = SodiumExamples;
+			productReference = 05E3C6C51CEFBD1B00BAFE1D /* SodiumExamples.app */;
+			productType = "com.apple.product-type.application";
+		};
+		05E3C6DD1CEFBDBB00BAFE1D /* SodiumCocoa */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05E3C6E31CEFBDBB00BAFE1D /* Build configuration list for PBXNativeTarget "SodiumCocoa" */;
+			buildPhases = (
+				05E3C6D91CEFBDBB00BAFE1D /* Sources */,
+				05E3C6DA1CEFBDBB00BAFE1D /* Frameworks */,
+				05E3C6DB1CEFBDBB00BAFE1D /* Headers */,
+				05E3C6DC1CEFBDBB00BAFE1D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				05E3C6EB1CEFC2CF00BAFE1D /* PBXTargetDependency */,
+			);
+			name = SodiumCocoa;
+			productName = SodiumCocoa;
+			productReference = 05E3C6DE1CEFBDBB00BAFE1D /* SodiumCocoa.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		055B91C21CD13D940048BC24 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0720;
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Whirlygig Ventures";
 				TargetAttributes = {
@@ -223,6 +358,12 @@
 					055B91D41CD13D950048BC24 = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
+					05E3C6C41CEFBD1B00BAFE1D = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					05E3C6DD1CEFBDBB00BAFE1D = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
 				};
 			};
 			buildConfigurationList = 055B91C51CD13D940048BC24 /* Build configuration list for PBXProject "Sodium" */;
@@ -231,6 +372,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 055B91C11CD13D940048BC24;
 			productRefGroup = 055B91CC1CD13D940048BC24 /* Products */;
@@ -239,6 +381,8 @@
 			targets = (
 				055B91CA1CD13D940048BC24 /* Sodium */,
 				055B91D41CD13D950048BC24 /* SodiumTests */,
+				05E3C6C41CEFBD1B00BAFE1D /* SodiumExamples */,
+				05E3C6DD1CEFBDBB00BAFE1D /* SodiumCocoa */,
 			);
 		};
 /* End PBXProject section */
@@ -253,6 +397,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		055B91D31CD13D950048BC24 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05E3C6C31CEFBD1B00BAFE1D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05E3C6D41CEFBD1B00BAFE1D /* LaunchScreen.storyboard in Resources */,
+				05E3C6D11CEFBD1B00BAFE1D /* Assets.xcassets in Resources */,
+				05E3C6CF1CEFBD1B00BAFE1D /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05E3C6DC1CEFBDBB00BAFE1D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -299,6 +460,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		05E3C6C11CEFBD1B00BAFE1D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05E3C6F11CEFD26A00BAFE1D /* Example2.1.swift in Sources */,
+				05E3C6CC1CEFBD1B00BAFE1D /* SecondViewController.swift in Sources */,
+				05E3C6C81CEFBD1B00BAFE1D /* AppDelegate.swift in Sources */,
+				05E3C6CA1CEFBD1B00BAFE1D /* FirstViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05E3C6D91CEFBDBB00BAFE1D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05E3C6E91CEFC1E600BAFE1D /* NAButton.swift in Sources */,
+				05E3C6E71CEFBDE400BAFE1D /* NATextField.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -307,7 +488,41 @@
 			target = 055B91CA1CD13D940048BC24 /* Sodium */;
 			targetProxy = 055B91D71CD13D950048BC24 /* PBXContainerItemProxy */;
 		};
+		05E3C6EB1CEFC2CF00BAFE1D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 055B91CA1CD13D940048BC24 /* Sodium */;
+			targetProxy = 05E3C6EA1CEFC2CF00BAFE1D /* PBXContainerItemProxy */;
+		};
+		05E3C6ED1CEFC2D500BAFE1D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05E3C6DD1CEFBDBB00BAFE1D /* SodiumCocoa */;
+			targetProxy = 05E3C6EC1CEFC2D500BAFE1D /* PBXContainerItemProxy */;
+		};
+		05E3C6EF1CEFC89E00BAFE1D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 055B91CA1CD13D940048BC24 /* Sodium */;
+			targetProxy = 05E3C6EE1CEFC89E00BAFE1D /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		05E3C6CD1CEFBD1B00BAFE1D /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				05E3C6CE1CEFBD1B00BAFE1D /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		05E3C6D21CEFBD1B00BAFE1D /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				05E3C6D31CEFBD1B00BAFE1D /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		055B91DD1CD13D950048BC24 /* Debug */ = {
@@ -456,6 +671,71 @@
 			};
 			name = Release;
 		};
+		05E3C6D61CEFBD1B00BAFE1D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				INFOPLIST_FILE = SodiumExamples/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ventures.whirlygig.sodium.examples.SodiumExamples;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		05E3C6D71CEFBD1B00BAFE1D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				INFOPLIST_FILE = SodiumExamples/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ventures.whirlygig.sodium.examples.SodiumExamples;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		05E3C6E41CEFBDBB00BAFE1D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = SodiumCocoa/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ventures.whirlygig.sodium.cocoa.SodiumCocoa;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		05E3C6E51CEFBDBB00BAFE1D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = SodiumCocoa/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ventures.whirlygig.sodium.cocoa.SodiumCocoa;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -485,6 +765,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		05E3C6D81CEFBD1B00BAFE1D /* Build configuration list for PBXNativeTarget "SodiumExamples" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05E3C6D61CEFBD1B00BAFE1D /* Debug */,
+				05E3C6D71CEFBD1B00BAFE1D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		05E3C6E31CEFBDBB00BAFE1D /* Build configuration list for PBXNativeTarget "SodiumCocoa" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05E3C6E41CEFBDBB00BAFE1D /* Debug */,
+				05E3C6E51CEFBDBB00BAFE1D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
