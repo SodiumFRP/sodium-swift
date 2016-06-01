@@ -29,6 +29,8 @@
 		057C5C721CD951590013C3E3 /* PriorityQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057C5C711CD951590013C3E3 /* PriorityQueue.swift */; };
 		057C5C741CDA76DC0013C3E3 /* Lazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057C5C731CDA76DC0013C3E3 /* Lazy.swift */; };
 		05B469B51CD84FB400166473 /* Array-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B469B41CD84FB400166473 /* Array-Extension.swift */; };
+		05C680E71CFE205F00B41A45 /* Example22.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C680E61CFE205F00B41A45 /* Example22.swift */; };
+		05C680E91CFE237100B41A45 /* NALabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C680E81CFE237100B41A45 /* NALabel.swift */; };
 		05DB911C1CEE7923006A7678 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 05DB911B1CEE7923006A7678 /* COPYING */; };
 		05DB911D1CEE7AA3006A7678 /* CellLoop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055B91E81CD140150048BC24 /* CellLoop.swift */; };
 		05E3C6C81CEFBD1B00BAFE1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6C71CEFBD1B00BAFE1D /* AppDelegate.swift */; };
@@ -41,6 +43,9 @@
 		05E3C6E71CEFBDE400BAFE1D /* NATextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6E61CEFBDE400BAFE1D /* NATextField.swift */; };
 		05E3C6E91CEFC1E600BAFE1D /* NAButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6E81CEFC1E600BAFE1D /* NAButton.swift */; };
 		05E3C6F11CEFD26A00BAFE1D /* Example2.1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6F01CEFD26A00BAFE1D /* Example2.1.swift */; };
+		05E3C6F31CEFE24900BAFE1D /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6F21CEFE24900BAFE1D /* Memory.swift */; };
+		05E3C6FB1CEFF53900BAFE1D /* SodiumCocoaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6FA1CEFF53900BAFE1D /* SodiumCocoaTests.swift */; };
+		05E3C6FD1CEFF53900BAFE1D /* SodiumCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E3C6DE1CEFBDBB00BAFE1D /* SodiumCocoa.framework */; };
 		05FE4C071CDD0C3B00108F68 /* StreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FE4C061CDD0C3B00108F68 /* StreamTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +78,13 @@
 			remoteGlobalIDString = 055B91CA1CD13D940048BC24;
 			remoteInfo = Sodium;
 		};
+		05E3C6FE1CEFF53900BAFE1D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 055B91C21CD13D940048BC24 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05E3C6DD1CEFBDBB00BAFE1D;
+			remoteInfo = SodiumCocoa;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -101,6 +113,8 @@
 		057C5C711CD951590013C3E3 /* PriorityQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriorityQueue.swift; sourceTree = "<group>"; };
 		057C5C731CDA76DC0013C3E3 /* Lazy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lazy.swift; sourceTree = "<group>"; };
 		05B469B41CD84FB400166473 /* Array-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array-Extension.swift"; sourceTree = "<group>"; };
+		05C680E61CFE205F00B41A45 /* Example22.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example22.swift; sourceTree = "<group>"; };
+		05C680E81CFE237100B41A45 /* NALabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NALabel.swift; sourceTree = "<group>"; };
 		05DB911B1CEE7923006A7678 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
 		05E3C6C51CEFBD1B00BAFE1D /* SodiumExamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SodiumExamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05E3C6C71CEFBD1B00BAFE1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -116,6 +130,10 @@
 		05E3C6E61CEFBDE400BAFE1D /* NATextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NATextField.swift; sourceTree = "<group>"; };
 		05E3C6E81CEFC1E600BAFE1D /* NAButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NAButton.swift; sourceTree = "<group>"; };
 		05E3C6F01CEFD26A00BAFE1D /* Example2.1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example2.1.swift; sourceTree = "<group>"; };
+		05E3C6F21CEFE24900BAFE1D /* Memory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
+		05E3C6F81CEFF53900BAFE1D /* SodiumCocoaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SodiumCocoaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		05E3C6FA1CEFF53900BAFE1D /* SodiumCocoaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SodiumCocoaTests.swift; sourceTree = "<group>"; };
+		05E3C6FC1CEFF53900BAFE1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05FE4C061CDD0C3B00108F68 /* StreamTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -149,6 +167,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		05E3C6F51CEFF53900BAFE1D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05E3C6FD1CEFF53900BAFE1D /* SodiumCocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -159,6 +185,7 @@
 				055B91D91CD13D950048BC24 /* SodiumTests */,
 				05E3C6C61CEFBD1B00BAFE1D /* SodiumExamples */,
 				05E3C6DF1CEFBDBB00BAFE1D /* SodiumCocoa */,
+				05E3C6F91CEFF53900BAFE1D /* SodiumCocoaTests */,
 				055B91CC1CD13D940048BC24 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -170,6 +197,7 @@
 				055B91D51CD13D950048BC24 /* SodiumTests.xctest */,
 				05E3C6C51CEFBD1B00BAFE1D /* SodiumExamples.app */,
 				05E3C6DE1CEFBDBB00BAFE1D /* SodiumCocoa.framework */,
+				05E3C6F81CEFF53900BAFE1D /* SodiumCocoaTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -189,6 +217,7 @@
 				057C5C731CDA76DC0013C3E3 /* Lazy.swift */,
 				055B91F01CD140150048BC24 /* LazyCell.swift */,
 				055B91F21CD140150048BC24 /* Listener.swift */,
+				05E3C6F21CEFE24900BAFE1D /* Memory.swift */,
 				055B91F61CD140150048BC24 /* Node.swift */,
 				055B91F71CD140150048BC24 /* Operational.swift */,
 				055B92091CD140280048BC24 /* Stream.swift */,
@@ -232,6 +261,7 @@
 				05E3C6D21CEFBD1B00BAFE1D /* LaunchScreen.storyboard */,
 				05E3C6D51CEFBD1B00BAFE1D /* Info.plist */,
 				05E3C6F01CEFD26A00BAFE1D /* Example2.1.swift */,
+				05C680E61CFE205F00B41A45 /* Example22.swift */,
 			);
 			path = SodiumExamples;
 			sourceTree = "<group>";
@@ -243,8 +273,18 @@
 				05E3C6E21CEFBDBB00BAFE1D /* Info.plist */,
 				05E3C6E61CEFBDE400BAFE1D /* NATextField.swift */,
 				05E3C6E81CEFC1E600BAFE1D /* NAButton.swift */,
+				05C680E81CFE237100B41A45 /* NALabel.swift */,
 			);
 			path = SodiumCocoa;
+			sourceTree = "<group>";
+		};
+		05E3C6F91CEFF53900BAFE1D /* SodiumCocoaTests */ = {
+			isa = PBXGroup;
+			children = (
+				05E3C6FA1CEFF53900BAFE1D /* SodiumCocoaTests.swift */,
+				05E3C6FC1CEFF53900BAFE1D /* Info.plist */,
+			);
+			path = SodiumCocoaTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -342,6 +382,24 @@
 			productReference = 05E3C6DE1CEFBDBB00BAFE1D /* SodiumCocoa.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		05E3C6F71CEFF53900BAFE1D /* SodiumCocoaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05E3C7001CEFF53900BAFE1D /* Build configuration list for PBXNativeTarget "SodiumCocoaTests" */;
+			buildPhases = (
+				05E3C6F41CEFF53900BAFE1D /* Sources */,
+				05E3C6F51CEFF53900BAFE1D /* Frameworks */,
+				05E3C6F61CEFF53900BAFE1D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				05E3C6FF1CEFF53900BAFE1D /* PBXTargetDependency */,
+			);
+			name = SodiumCocoaTests;
+			productName = SodiumCocoaTests;
+			productReference = 05E3C6F81CEFF53900BAFE1D /* SodiumCocoaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -364,6 +422,9 @@
 					05E3C6DD1CEFBDBB00BAFE1D = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
+					05E3C6F71CEFF53900BAFE1D = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
 				};
 			};
 			buildConfigurationList = 055B91C51CD13D940048BC24 /* Build configuration list for PBXProject "Sodium" */;
@@ -383,6 +444,7 @@
 				055B91D41CD13D950048BC24 /* SodiumTests */,
 				05E3C6C41CEFBD1B00BAFE1D /* SodiumExamples */,
 				05E3C6DD1CEFBDBB00BAFE1D /* SodiumCocoa */,
+				05E3C6F71CEFF53900BAFE1D /* SodiumCocoaTests */,
 			);
 		};
 /* End PBXProject section */
@@ -420,6 +482,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		05E3C6F61CEFF53900BAFE1D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -430,6 +499,7 @@
 				055B92081CD140150048BC24 /* Operational.swift in Sources */,
 				055B91FD1CD140150048BC24 /* IKeepListenersAlive.swift in Sources */,
 				055B91FE1CD140150048BC24 /* ListenerType.swift in Sources */,
+				05E3C6F31CEFE24900BAFE1D /* Memory.swift in Sources */,
 				055B92031CD140150048BC24 /* Listener.swift in Sources */,
 				055B920D1CD140280048BC24 /* Stream.swift in Sources */,
 				055B91FC1CD140150048BC24 /* CompositeListener.swift in Sources */,
@@ -467,6 +537,7 @@
 				05E3C6F11CEFD26A00BAFE1D /* Example2.1.swift in Sources */,
 				05E3C6CC1CEFBD1B00BAFE1D /* SecondViewController.swift in Sources */,
 				05E3C6C81CEFBD1B00BAFE1D /* AppDelegate.swift in Sources */,
+				05C680E71CFE205F00B41A45 /* Example22.swift in Sources */,
 				05E3C6CA1CEFBD1B00BAFE1D /* FirstViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -475,8 +546,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05C680E91CFE237100B41A45 /* NALabel.swift in Sources */,
 				05E3C6E91CEFC1E600BAFE1D /* NAButton.swift in Sources */,
 				05E3C6E71CEFBDE400BAFE1D /* NATextField.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05E3C6F41CEFF53900BAFE1D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05E3C6FB1CEFF53900BAFE1D /* SodiumCocoaTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,6 +582,11 @@
 			isa = PBXTargetDependency;
 			target = 055B91CA1CD13D940048BC24 /* Sodium */;
 			targetProxy = 05E3C6EE1CEFC89E00BAFE1D /* PBXContainerItemProxy */;
+		};
+		05E3C6FF1CEFF53900BAFE1D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05E3C6DD1CEFBDBB00BAFE1D /* SodiumCocoa */;
+			targetProxy = 05E3C6FE1CEFF53900BAFE1D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -736,6 +821,30 @@
 			};
 			name = Release;
 		};
+		05E3C7011CEFF53900BAFE1D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				INFOPLIST_FILE = SodiumCocoaTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ventures.whirlygig.sodium.cocoa.SodiumCocoaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		05E3C7021CEFF53900BAFE1D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				INFOPLIST_FILE = SodiumCocoaTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = ventures.whirlygig.sodium.cocoa.SodiumCocoaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -773,6 +882,7 @@
 				05E3C6D71CEFBD1B00BAFE1D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		05E3C6E31CEFBDBB00BAFE1D /* Build configuration list for PBXNativeTarget "SodiumCocoa" */ = {
 			isa = XCConfigurationList;
@@ -781,6 +891,16 @@
 				05E3C6E51CEFBDBB00BAFE1D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05E3C7001CEFF53900BAFE1D /* Build configuration list for PBXNativeTarget "SodiumCocoaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05E3C7011CEFF53900BAFE1D /* Debug */,
+				05E3C7021CEFF53900BAFE1D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -4,6 +4,8 @@
 */
 public protocol CellType {
     associatedtype Element
+    var refs: MemReferences? { get }
+    
     func stream() -> Stream<Element>
     func sample() -> Element
     func sampleLazy(trans: Transaction) -> Lazy<Element>
@@ -13,6 +15,7 @@ public protocol CellType {
 
 
 public struct AnyCell<T>: CellType {
+    private let _refs: MemReferences?
     private let _stream: () -> Stream<T>
     private let _sample: () -> T
     private let _sampleLazy: (Transaction)->Lazy<T>
@@ -20,12 +23,15 @@ public struct AnyCell<T>: CellType {
     private let _value: (Transaction) -> Stream<T>
     
     init<Base: CellType where T == Base.Element>(_ base: Base) {
+        _refs = base.refs
         _stream = base.stream
         _sample = base.sample
         _sampleLazy = base.sampleLazy
         _sampleNoTransaction = base.sampleNoTransaction
         _value = base.value
     }
+    
+    public var refs: MemReferences? { return self._refs }
     
     public func stream() -> Stream<T> {
         return _stream()
@@ -53,6 +59,7 @@ public class CellBase<T> : CellType {
     internal let _stream: Stream<T>
     private var _value: T
     private var _valueUpdate: T?
+    public var refs: MemReferences?
     
     /**
         Creates a cell with a constant value.
@@ -63,8 +70,8 @@ public class CellBase<T> : CellType {
  
         - Returns: A cell with a constant value.
      */
-    public static func constant<T>(value: T) -> Cell<T> {
-        return Cell<T>(value: value)
+    public static func constant<T>(value: T, refs: MemReferences? = nil) -> Cell<T> {
+        return Cell<T>(value: value, refs: refs)
     }
     
     /**
@@ -85,18 +92,32 @@ public class CellBase<T> : CellType {
  
         - Parameter value: The constant value of the cell.
      */
-    internal init(value: T)
+    internal init(value: T, refs: MemReferences? = nil)
     {
+        self.refs = refs
+        if let r = self.refs {
+            r.addRef()
+        }
         self._stream = Stream<T>()
         self._value = value
     }
     
  
-    internal init(stream: Stream<T>, initialValue: T) {
+    internal init(stream: Stream<T>, initialValue: T, refs: MemReferences? = nil) {
+        self.refs = refs
+        if let r = self.refs {
+            r.addRef()
+        }
         self._stream = stream
         self._value = initialValue
     }
 
+    deinit {
+        if let r = self.refs {
+            r.release()
+        }
+    }
+    
     internal var keepListenersAlive: IKeepListenersAlive { return self._stream.keepListenersAlive }
 
     var ValueProperty: T
@@ -223,21 +244,21 @@ private class LazySample<C:CellType>
  CellBase<> has all the data, and we just have the cleanup closure to take care of.
  */
 public class Cell<T>: CellBase<T> {
-    private var cleanup: Listener = Listener(unlisten: nop)
+    private var cleanup: Listener = Listener(unlisten: nop, refs: nil)
 
-    public override init(value: T) {
-        super.init (value: value)
-        self.cleanup = doListen()
+    public override init(value: T, refs: MemReferences? = nil) {
+        super.init (value: value, refs: refs)
+        self.cleanup = doListen(refs)
     }
 
-    public override init(stream: Stream<T>, initialValue: T) {
-        super.init(stream: stream, initialValue: initialValue)
-        self.cleanup = doListen()
+    public override init(stream: Stream<T>, initialValue: T, refs: MemReferences? = nil) {
+        super.init(stream: stream, initialValue: initialValue, refs: refs)
+        self.cleanup = doListen(refs)
     }
     
-    private func doListen() -> Listener {
+    private func doListen(refs: MemReferences?) -> Listener {
         return Transaction.apply { trans1 in
-            self._stream.listen(Node<T>.Null, trans: trans1, action: { [weak self] (trans2, a) in
+            self.stream().listen(Node<Element>.Null, trans: trans1, action: { [weak self] (trans2, a) in
                 if self!._valueUpdate == nil {
                     trans2.last({
                         self!._value = self!._valueUpdate!
@@ -245,7 +266,8 @@ public class Cell<T>: CellBase<T> {
                     })
                 }
                 self!._valueUpdate = a
-                }, suppressEarlierFirings: false)
+                }, suppressEarlierFirings: false,
+                refs: refs)
         }
     }
     
@@ -388,7 +410,7 @@ extension CellType {
                 }
             })
             return out.lastFiringOnly(trans0).unsafeAddCleanup([l1,l2,
-                Listener(unlisten: { inTarget.unlink(nodeTarget) })]).holdLazy({ bf.sampleNoTransaction()(self.sampleNoTransaction()) })
+                Listener(unlisten: { inTarget.unlink(nodeTarget) }, refs: self.refs)]).holdLazy({ bf.sampleNoTransaction()(self.sampleNoTransaction()) })
         }
     }
 
@@ -406,7 +428,7 @@ extension CellType {
      */
   
     public func listen(handler: Handler) -> Listener {
-        return Transaction.apply{trans in self.value(trans).listen(handler)}!
+        return Transaction.apply{trans in self.value(trans).listen(handler, refs: self.refs)}!
     }
 
     /**

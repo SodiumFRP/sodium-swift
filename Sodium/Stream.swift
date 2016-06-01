@@ -10,6 +10,7 @@ public class Stream<T>
     public typealias Handler = T -> Void
     typealias Action = (Transaction, T) -> Void
     
+    internal let refs: MemReferences?
     internal let node: Node<T>
     private var disposables: Array<Listener>
     private var firings: Array<T>
@@ -25,23 +26,33 @@ public class Stream<T>
     public static func never() -> Stream<T> { return Stream<T>() }
 
     deinit {
+        if let r = self.refs { r.release() }
         print("Stream<> deinit")
     }
     
-    public init() {
+    public init(refs: MemReferences? = nil) {
+        self.refs = refs
+        
+        if let r = self.refs {
+            r.addRef()
+        }
         self.keepListenersAlive = KeepListenersAliveImplementation()
         self.node = Node<T>(rank: 0)
         self.disposables = []
         self.firings = []
     }
 
-    internal convenience init(keepListenersAlive: IKeepListenersAlive)
+    internal convenience init(keepListenersAlive: IKeepListenersAlive, refs: MemReferences? = nil)
     {
-        self.init(keepListenersAlive: keepListenersAlive, node: Node<T>(rank: 0), disposables: [Listener](), firings: [T]())
+        self.init(keepListenersAlive: keepListenersAlive, node: Node<T>(rank: 0), disposables: [Listener](), firings: [T](), refs: refs)
     }
 
-    private init(keepListenersAlive: IKeepListenersAlive, node: Node<T>, disposables: [Listener], firings: [T])
+    private init(keepListenersAlive: IKeepListenersAlive, node: Node<T>, disposables: [Listener], firings: [T], refs: MemReferences? = nil)
     {
+        self.refs = refs
+        if let r = self.refs {
+            r.addRef()
+        }
         self.keepListenersAlive = keepListenersAlive
         self.node = node
         self.disposables = disposables
@@ -60,7 +71,7 @@ public class Stream<T>
      
      To ensure this `Listener` is disposed as soon as the stream it is listening to is either disposed, pass the returned listener to this stream's `AddCleanup` method.
      */
-    public func listen(handler: Handler) -> Listener
+    public func listen(handler: Handler, refs: MemReferences?) -> Listener
     {
         var innerListener = self.listenWeak(handler)
         var ls = [Listener]()
@@ -75,7 +86,7 @@ public class Stream<T>
                 if (ls.first != nil) {
                     self!.keepListenersAlive.stopKeepingListenerAlive(ls.first!)
                 }
-            })
+            }, refs: refs)
         )
 
         objc_sync_enter(self.lock)
@@ -142,7 +153,7 @@ public class Stream<T>
         ls.append(self.listen({ a in
             handler(a)
             ls.first!.unlisten()
-        }))
+        }, refs: self.refs))
         return ls.first!
     }
 
@@ -178,11 +189,11 @@ public class Stream<T>
         return tcs.Task
     }
 */
-    internal func listen(target: INode, action: Action) -> Listener {
-        return Transaction.apply { trans1 in self.listen(target, trans: trans1, action: action, suppressEarlierFirings: false) }
+    internal func listen(target: INode, action: Action, refs: MemReferences? = nil) -> Listener {
+        return Transaction.apply { trans1 in self.listen(target, trans: trans1, action: action, suppressEarlierFirings: false, refs: refs) }
     }
 
-    internal func listen(target: INode, trans: Transaction, action: Action, suppressEarlierFirings: Bool) -> Listener {
+    internal func listen(target: INode, trans: Transaction, action: Action, suppressEarlierFirings: Bool, refs: MemReferences? = nil) -> Listener {
         
         let t = self.node.link(action, target: target)
         let nodeTarget = t.1
@@ -205,7 +216,7 @@ public class Stream<T>
                 }
             }
         }
-        return ListenerImplementation(stream: self, action: action, target: nodeTarget)
+        return ListenerImplementation(stream: self, action: action, target: nodeTarget, refs: refs)
     }
 
     /**
@@ -219,7 +230,7 @@ public class Stream<T>
     public func map<TResult>(f: (T) -> TResult) -> Stream<TResult>
     {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
-        let l = self.listen(out.node, action: { [weak out] (trans2, a) in out!.send(trans2, a: f(a)) } )
+        let l = self.listen(out.node, action: { [weak out] (trans2, a) in out!.send(trans2, a: f(a)) }, refs: self.refs )
         return out.unsafeAddCleanup(l)
     }
 
@@ -374,7 +385,7 @@ public class Stream<T>
         let h = out.send
         let l1 = self.listen(left, action: h)
         let l2 = s.listen(right, action: h)
-        return out.unsafeAddCleanup([l1, l2, Listener(unlisten: { left.unlink(nodeTarget) })])
+        return out.unsafeAddCleanup([l1, l2, Listener(unlisten: { left.unlink(nodeTarget) }, refs: self.refs)])
     }
 
     /**
@@ -572,7 +583,7 @@ public func calm() -> Stream<T> {
         return self
     }
 
-    func send(trans: Transaction, a: T)
+    public func send(trans: Transaction, a: T)
     {
         if (self.firings.isEmpty)
         {
@@ -610,11 +621,11 @@ class ListenerImplementation<T> : Listener
     
     private let target: NodeTarget<T>
     
-    init(stream: Stream<T>, action: Action, target: NodeTarget<T>) {
+    init(stream: Stream<T>, action: Action, target: NodeTarget<T>, refs: MemReferences? = nil) {
         self.stream = stream
         self.action = action
         self.target = target
-        super.init(unlisten: { })
+        super.init(unlisten: { }, refs: refs)
     }
     
     internal override func unlisten()

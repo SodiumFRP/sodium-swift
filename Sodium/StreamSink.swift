@@ -11,21 +11,21 @@ public class StreamSink<T> : Stream<T>
     private let fold: (T,T)->T
    
     /// Construct a StreamSink that uses the last value if `Send` is called more than once per transaction.
-    public convenience override init()
+    public convenience override init(refs: MemReferences? = nil)
     {
         self.init(fold: { (left, right) in fatalError("Send was called more than once in a transaction, which isn't allowed.  To combine the streams, pass a coalescing function to the StreamSink constructor.")
             return right
-        })
+        }, refs: refs)
     }
 
     /**
      Construct a StreamSink that uses
      - Parameter fold: to combine values if `send` is called more than once per transaction.
      */
-    init(fold: (T,T) -> T)
+    init(fold: (T,T) -> T, refs: MemReferences? = nil)
     {
         self.fold = fold
-        super.init()
+        super.init(refs: refs)
         let h = CoalesceHandler<T>()
         self.coalescer = h.create(fold, out: self)
     }

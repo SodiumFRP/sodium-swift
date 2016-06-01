@@ -12,13 +12,13 @@ public class StreamLoop<T> : Stream<T>
     /**
      Create an `StreamLoop<T>`.  This must be called from within a transaction.
      */
-    public override init()
+    public override init(refs: MemReferences? = nil)
     {
         if (!Transaction.hasCurrentTransaction())
         {
             fatalError("StreamLoop and CellLoop must be used within an explicit transaction")
         }
-        super.init()
+        super.init(refs: refs)
     }
 
     internal var isAssigned: Bool

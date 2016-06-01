@@ -12,9 +12,9 @@ public class CellSink<T> : Cell<T>
 
     - Parameter initialValue: The initial value of the cell.
     */
-    public convenience init(_ initialValue: T)
+    public convenience init(_ initialValue: T, refs: MemReferences? = nil)
     {
-        self.init(streamSink: StreamSink<T>(), initialValue: initialValue)
+        self.init(streamSink: StreamSink<T>(), initialValue: initialValue, refs: refs)
     }
 
     /**
@@ -24,14 +24,14 @@ public class CellSink<T> : Cell<T>
      - Parameter initialValue: The initial value of the cell.
      - Parameter coalesce: Function to combine values when `send` is called more than once per transaction.
     */
-    public convenience init(initialValue: T, coalesce: (T,T) -> T)
+    public convenience init(initialValue: T, coalesce: (T,T) -> T, refs: MemReferences? = nil)
     {
-        self.init(streamSink: StreamSink<T>(fold: coalesce), initialValue: initialValue)
+        self.init(streamSink: StreamSink<T>(fold: coalesce), initialValue: initialValue, refs: refs)
     }
 
-    private init(streamSink: StreamSink<T>, initialValue: T) {
+    private init(streamSink: StreamSink<T>, initialValue: T, refs: MemReferences? = nil) {
         self.streamSink = streamSink
-        super.init(stream: streamSink, initialValue: initialValue)
+        super.init(stream: streamSink, initialValue: initialValue, refs: refs)
     }
 
     /**

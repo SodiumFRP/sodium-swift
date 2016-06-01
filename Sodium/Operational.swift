@@ -1,4 +1,4 @@
-class Operational
+public class Operational
 {
     /**
      A stream that gives the updates/steps for a cell.
@@ -8,7 +8,7 @@ class Operational
      - Returns:
      - Remarks: This is an **OPERATIONAL** primitive, which is not part of the main Sodium API.  It breaks the property of non-detectability of cell steps/updates.  The rule with this primitive is that you should only use it in functions that do not allow the caller to detect the cell updates.
      */
-    static func updates<T>(c: Cell<T>) -> Stream<T> {
+    public static func updates<T>(c: Cell<T>) -> Stream<T> {
         return Transaction.apply(c.updates)
     }
 
@@ -20,7 +20,7 @@ class Operational
      - Returns:
      - Remarks: This is an **OPERATIONAL** primitive, which is not part of the main Sodium API.  It breaks the property of non-detectability of cell steps/updates.  The rule with this primitive is that you should only use it in functions that do not allow the caller to detect the cell updates.
      */
-    static func value<C:CellType>(c: C) -> Stream<C.Element> {
+    public static func value<C:CellType>(c: C) -> Stream<C.Element> {
         return Transaction.apply(c.value)
     }
 

@@ -3,7 +3,7 @@ import Foundation
 typealias Block = () -> Void
 typealias Action = () throws -> Void
 typealias TV = (Transaction) throws -> Void
-typealias OTV = (Transaction?) throws -> Void
+public typealias OTV = (Transaction?) throws -> Void
 
 let nop: Block = {}
 
@@ -197,7 +197,7 @@ public final class Transaction
 
      - Parameter action: The action to run after the current transaction is closed or immediately if there is no current transaction.
      */
-    internal static func post(action: OTV) {
+    public static func post(action: OTV) {
         // -1 will mean it runs before anything split/deferred, and will run outside a transaction context.
         // TODO: make enum for post
         self.run { trans in trans.post(-1, action: action) }

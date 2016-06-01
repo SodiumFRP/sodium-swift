@@ -10,10 +10,11 @@ import UIKit
 import Sodium
 
 public class NAButton : UIButton {
-    public var clicked = StreamSink<Unit>()
+    let refs: MemReferences?
+    public let clicked: StreamSink<Unit>
     
-    public convenience init(_ text: String) {
-        self.init(type: .System)
+    public convenience init(_ text: String, refs: MemReferences? = nil) {
+        self.init(type: .System, refs: refs)
         
         self.titleLabel!.text = text
         self.layer.borderColor = UIColor.redColor().CGColor
@@ -21,7 +22,12 @@ public class NAButton : UIButton {
         self.addTarget(self, action: #selector(NAButton.onclicked), forControlEvents: .TouchUpInside)
     }
     
-    init(type: UIButtonType) {
+    init(type: UIButtonType, refs: MemReferences? = nil) {
+        self.clicked = StreamSink<Unit>(refs: refs)
+        self.refs = refs
+        if let r = self.refs {
+            r.addRef()
+        }
         super.init(frame: CGRectMake(0,0,10,10))
     }
     
@@ -30,6 +36,7 @@ public class NAButton : UIButton {
     }
 
     deinit {
+        if let r = self.refs { r.release() }
         print("NAButton deinit")
     }
 

@@ -12,20 +12,23 @@ import SodiumCocoa
 
 class Example21 : UIViewController {
  
+    var refs: MemReferences?
+
     deinit {
-        print ("Example21 deinit")
+        print ("Example21 deinit \(refs?.count())")
     }
     
     override func viewDidLoad() {
-        let clear = NAButton("Clear")
+        
+        let clear = NAButton("Clear", refs: refs)
         clear.frame = CGRectMake(50,30,100,30)
         clear.setTitle("clear", forState: .Normal)
         clear.setTitleColor(UIColor.blueColor(), forState: .Normal)
         self.view.addSubview(clear)
         
-        let sClearIt = clear.clicked.map { _ in "" }
-        //let sClearIt = Stream<String>()
-        let text = NATextField(s: sClearIt, text: "Hello")
+        //let sClearIt = clear.clicked.map { _ in "" }
+        let sClearIt = Stream<String>()
+        let text = NATextField(s: sClearIt, text: "Hello", refs: refs)
         text.text = "Hello2"
         text.frame = CGRectMake(10,50,100,20)
         

@@ -1,5 +1,6 @@
 public class CompositeListener : Listener
 {
+    // TODO: MemReferences
     private var listeners: [Listener]
 
     public convenience init()
@@ -10,7 +11,7 @@ public class CompositeListener : Listener
     public init(listeners: [Listener]?)
     {
         self.listeners = listeners ?? []
-        super.init(unlisten: {})
+        super.init(unlisten: {}, refs: nil)
     }
 
     public func add(l: Listener) {

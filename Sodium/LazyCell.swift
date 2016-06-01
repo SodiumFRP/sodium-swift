@@ -1,63 +1,62 @@
 
 public class LazyCell<T> : CellType
 {
-    internal var cleanup: Listener = Listener(unlisten: nop)
+    public let refs: MemReferences?
+    internal var cleanup: Listener = Listener(unlisten: nop, refs: nil)
     internal let _stream: Stream<T>
     internal var LazyInitialValue: Lazy<T>
     internal lazy var _value: T = self.LazyInitialValue**
     internal var _valueUpdate: T?
     
-    init(stream: Stream<T>, @autoclosure(escaping) initialValue: () -> T)
+    init(stream: Stream<T>, @autoclosure(escaping) initialValue: () -> T, refs: MemReferences? = nil)
     {
+        self.refs = refs
+        if let r = self.refs {
+            r.addRef()
+        }
         self.LazyInitialValue = Lazy<T>(f: initialValue)
         self._stream = stream
-        self.cleanup = Transaction.apply{ trans1 in
-            self._stream.listen(Node<T>.Null, trans: trans1, action: { (trans2, a) in
-                if self._valueUpdate == nil {
-                    trans2.last({
-                        self._value = self._valueUpdate!
-                        self._valueUpdate = nil
-                    })
-                }
-                self._valueUpdate = a
-                }, suppressEarlierFirings: false)
-        }
+        self.cleanup = doListen(refs)
     }
     
-    init(stream: Stream<T>, lazyInitialValue: () -> T)
+    init(stream: Stream<T>, lazyInitialValue: () -> T, refs: MemReferences? = nil)
     {
         self.LazyInitialValue = Lazy<T>(f: lazyInitialValue)
         self._stream = stream
-        self.cleanup = Transaction.apply{ trans1 in
-            self._stream.listen(Node<T>.Null, trans: trans1, action: { (trans2, a) in
-                if self._valueUpdate == nil {
-                    trans2.last({
-                        self._value = self._valueUpdate!
-                        self._valueUpdate = nil
-                    })
-                }
-                self._valueUpdate = a
-                }, suppressEarlierFirings: false)
+        self.refs = refs
+        if let r = self.refs {
+            r.addRef()
         }
+        self.cleanup = doListen(refs)
     }
 
-    public init(stream: Stream<T>, lazyInitialValue: Lazy<T>)
+    public init(stream: Stream<T>, lazyInitialValue: Lazy<T>, refs: MemReferences? = nil)
     {
         self.LazyInitialValue = lazyInitialValue
         self._stream = stream
-        self.cleanup = Transaction.apply{ trans1 in
-            self._stream.listen(Node<T>.Null, trans: trans1, action: { (trans2, a) in
-                if self._valueUpdate == nil {
+        self.refs = refs
+        if let r = self.refs {
+            r.addRef()
+        }
+        self.cleanup = doListen(refs)
+    }
+    
+    private func doListen(refs: MemReferences?) -> Listener {
+        return Transaction.apply { trans1 in
+            self.stream().listen(Node<Element>.Null, trans: trans1, action: { [weak self] (trans2, a) in
+                if self!._valueUpdate == nil {
                     trans2.last({
-                        self._value = self._valueUpdate!
-                        self._valueUpdate = nil
+                        self!._value = self!._valueUpdate!
+                        self!._valueUpdate = nil
                     })
                 }
-                self._valueUpdate = a
-                }, suppressEarlierFirings: false)
+                self!._valueUpdate = a
+                }, suppressEarlierFirings: false,
+                refs: refs)
         }
     }
     
+
     public func stream() -> Stream<T> {
         return Stream<T>()
     }

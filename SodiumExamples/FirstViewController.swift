@@ -7,15 +7,21 @@
 //
 
 import UIKit
+import Sodium
 import SodiumCocoa
 
 class FirstViewController: UIViewController {
     
+    let refs = MemReferences()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        //let vc = Example21()
+        let vc = Example22()
+        vc.refs = self.refs
         dispatch_after(DISPATCH_TIME_NOW, dispatch_get_main_queue(), {
-            self.presentViewController(Example21(), animated: true, completion: nil)
+            self.presentViewController(vc, animated: true, completion: nil)
         })
     }
 
