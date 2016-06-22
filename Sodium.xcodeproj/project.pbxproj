@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		055B91D61CD13D950048BC24 /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B91CB1CD13D940048BC24 /* Sodium.framework */; };
+		055B91D61CD13D950048BC24 /* SodiumSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B91CB1CD13D940048BC24 /* SodiumSwift.framework */; };
 		055B91DB1CD13D950048BC24 /* SodiumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055B91DA1CD13D950048BC24 /* SodiumTests.swift */; };
 		055B91E61CD13DD10048BC24 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055B91E51CD13DD10048BC24 /* Cell.swift */; };
 		055B91FA1CD140150048BC24 /* CellSink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055B91E91CD140150048BC24 /* CellSink.swift */; };
@@ -89,7 +89,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		055B91CB1CD13D940048BC24 /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		055B91CB1CD13D940048BC24 /* SodiumSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SodiumSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		055B91D51CD13D950048BC24 /* SodiumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SodiumTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		055B91DA1CD13D950048BC24 /* SodiumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SodiumTests.swift; sourceTree = "<group>"; };
 		055B91DC1CD13D950048BC24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -151,7 +151,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				055B91D61CD13D950048BC24 /* Sodium.framework in Frameworks */,
+				055B91D61CD13D950048BC24 /* SodiumSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,7 +195,7 @@
 		055B91CC1CD13D940048BC24 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				055B91CB1CD13D940048BC24 /* Sodium.framework */,
+				055B91CB1CD13D940048BC24 /* SodiumSwift.framework */,
 				055B91D51CD13D950048BC24 /* SodiumTests.xctest */,
 				05E3C6C51CEFBD1B00BAFE1D /* SodiumExamples.app */,
 				05E3C6DE1CEFBDBB00BAFE1D /* SodiumCocoa.framework */,
@@ -326,7 +326,7 @@
 			);
 			name = Sodium;
 			productName = Sodium;
-			productReference = 055B91CB1CD13D940048BC24 /* Sodium.framework */;
+			productReference = 055B91CB1CD13D940048BC24 /* SodiumSwift.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		055B91D41CD13D950048BC24 /* SodiumTests */ = {
@@ -715,7 +715,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ventures.whirlygig.Sodium;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME)Swift";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -733,7 +733,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ventures.whirlygig.Sodium;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME)Swift";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Sodium
+import SodiumSwift
 
 public class NAButton : UIButton {
     let refs: MemReferences?

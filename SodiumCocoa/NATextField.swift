@@ -1,5 +1,5 @@
 import UIKit
-import Sodium
+import SodiumSwift
 
 /**
  ## Sodium TextField

@@ -8,7 +8,7 @@
  */
 
 import UIKit
-import Sodium
+import SodiumSwift
 
 public class NALabel : UILabel {
     var txt: Cell<String>
