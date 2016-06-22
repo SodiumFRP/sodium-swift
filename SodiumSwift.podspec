@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SodiumSwift"
-  s.version      = "0.2.4"
+  s.version      = "0.2.5"
   s.summary      = "Sodium library for Swift."
   s.description  = <<-DESC
     Sodium FRP library for Swift 2.2 (XCode 7.3.1)
@@ -9,8 +9,7 @@ Pod::Spec.new do |s|
 
   s.homepage     = "https://github.com/SodiumFRP/sodium-swift.git"
   s.license      = { :type => "MIT", :file => "COPYING" }
-  s.authors      = { "Stephen Blackheath", "Anthony Jones", "Andrew Bradnan" }
-  s.social_media_url   = "http://twitter.com/NullPlague"
+  s.authors      = 'Stephen Blackheath', 'Anthony Jones', 'Andrew Bradnan'
   
   # only because we are using frameworks
   s.platform     = :ios, "8.0"
