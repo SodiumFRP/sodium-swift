@@ -1,10 +1,10 @@
 /**
- # Example22.swift
+ # Example23.swift
  ##  Sodium
  
  - Author: Andrew Bradnan
  - Date: 5/31/16
- - Copyright:   Copyright © 2016 Whirlygig Ventures. All rights reserved.
+ - Copyright: Copyright © 2016 Whirlygig Ventures. All rights reserved.
  */
 
 import UIKit

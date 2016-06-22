@@ -18,7 +18,7 @@ class FirstViewController: UIViewController {
         super.viewDidLoad()
 
         //let vc = Example21()
-        let vc = Example22()
+        let vc = Example24()
         vc.refs = self.refs
         dispatch_after(DISPATCH_TIME_NOW, dispatch_get_main_queue(), {
             self.presentViewController(vc, animated: true, completion: nil)

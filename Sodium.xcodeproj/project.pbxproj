@@ -33,6 +33,7 @@
 		05C680E91CFE237100B41A45 /* NALabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C680E81CFE237100B41A45 /* NALabel.swift */; };
 		05DB911C1CEE7923006A7678 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = 05DB911B1CEE7923006A7678 /* COPYING */; };
 		05DB911D1CEE7AA3006A7678 /* CellLoop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055B91E81CD140150048BC24 /* CellLoop.swift */; };
+		05E150431CFF9C6F008AB9B3 /* Example24.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E150421CFF9C6F008AB9B3 /* Example24.swift */; };
 		05E3C6C81CEFBD1B00BAFE1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6C71CEFBD1B00BAFE1D /* AppDelegate.swift */; };
 		05E3C6CA1CEFBD1B00BAFE1D /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6C91CEFBD1B00BAFE1D /* FirstViewController.swift */; };
 		05E3C6CC1CEFBD1B00BAFE1D /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6CB1CEFBD1B00BAFE1D /* SecondViewController.swift */; };
@@ -116,6 +117,7 @@
 		05C680E61CFE205F00B41A45 /* Example22.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example22.swift; sourceTree = "<group>"; };
 		05C680E81CFE237100B41A45 /* NALabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NALabel.swift; sourceTree = "<group>"; };
 		05DB911B1CEE7923006A7678 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		05E150421CFF9C6F008AB9B3 /* Example24.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example24.swift; sourceTree = "<group>"; };
 		05E3C6C51CEFBD1B00BAFE1D /* SodiumExamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SodiumExamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05E3C6C71CEFBD1B00BAFE1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		05E3C6C91CEFBD1B00BAFE1D /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 				05E3C6D51CEFBD1B00BAFE1D /* Info.plist */,
 				05E3C6F01CEFD26A00BAFE1D /* Example2.1.swift */,
 				05C680E61CFE205F00B41A45 /* Example22.swift */,
+				05E150421CFF9C6F008AB9B3 /* Example24.swift */,
 			);
 			path = SodiumExamples;
 			sourceTree = "<group>";
@@ -534,6 +537,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05E150431CFF9C6F008AB9B3 /* Example24.swift in Sources */,
 				05E3C6F11CEFD26A00BAFE1D /* Example2.1.swift in Sources */,
 				05E3C6CC1CEFBD1B00BAFE1D /* SecondViewController.swift in Sources */,
 				05E3C6C81CEFBD1B00BAFE1D /* AppDelegate.swift in Sources */,
