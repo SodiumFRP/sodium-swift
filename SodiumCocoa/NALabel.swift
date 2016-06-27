@@ -11,7 +11,7 @@ import UIKit
 import SodiumSwift
 
 public class NALabel : UILabel {
-    var txt: Cell<String>
+    public var txt: Cell<String>
     
     public init(txt: Cell<String>, refs: MemReferences? = nil ) {
         self.txt = txt //Cell<String>(value: text, refs: refs)
@@ -37,7 +37,25 @@ public class NALabel : UILabel {
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        fatalError()
+        self.txt = Cell<String>(value: "", refs: nil)
+        super.init(coder: aDecoder)
+        l = Operational.updates(txt).listen ({ txt in
+            if NSThread.isMainThread() {
+                self.text = txt
+            } else {
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.text = txt
+                }
+            }
+            }, refs: nil)
+        
+        // Set the text at the end of the transaction so SLabel works
+        // with CellLoops.
+        Transaction.post{ _ in
+            dispatch_async(dispatch_get_main_queue()) {
+                self.text = self.txt.sample()
+            }
+        }
     }
     
     private var l: Listener?
