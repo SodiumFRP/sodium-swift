@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SodiumSwift"
-  s.version      = "0.2.5"
+  s.version      = "0.2.7"
   s.summary      = "Sodium library for Swift."
   s.description  = <<-DESC
     Sodium FRP library for Swift 2.2 (XCode 7.3.1)

@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SodiumCocoaSwift"
-  s.version      = "0.2.5"
+  s.version      = "0.2.6"
   s.summary      = "Sodium library for Swift Cocoa controls."
   s.description  = <<-DESC
     Sodium FRP library for Cocoa controls.
@@ -19,5 +19,6 @@ Pod::Spec.new do |s|
   s.source_files  = "SodiumCocoa/**/*.{swift}"
 
   s.dependency 'SodiumSwift'
+  s.dependency 'SwiftCommon'
 
 end

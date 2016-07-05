@@ -10,7 +10,11 @@ import SodiumSwift
  */
 public class NATextField : UITextField {
     var refs: MemReferences?
-    public var stext = CellSink<String>("")
+    public var txt = CellSink<String>("") {
+        didSet{
+            self.userChanges = txt.stream()
+        }
+    }
     weak var userChanges: Stream<String>!
     private var l: Listener?
     
@@ -23,8 +27,7 @@ public class NATextField : UITextField {
     }
     
     init(frame: CGRect, text: String, refs: MemReferences? = nil) {
-        self.stext = CellSink<String>(text, refs: refs)
-        self.userChanges = stext.stream()
+        self.txt = CellSink<String>(text, refs: refs)
         self.refs = refs
         if let r = self.refs { r.addRef() }
         super.init(frame: frame)
@@ -50,6 +53,6 @@ public class NATextField : UITextField {
     }
     
     @objc private func textFieldDidChange(sender: UITextField) {
-        self.stext.send(sender.text!)
+        self.txt.send(sender.text!)
     }
 }

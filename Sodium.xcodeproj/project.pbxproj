@@ -28,6 +28,7 @@
 		0576BE491CDEDEA300BACC72 /* TestCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0576BE481CDEDEA300BACC72 /* TestCommon.swift */; };
 		057C5C721CD951590013C3E3 /* PriorityQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057C5C711CD951590013C3E3 /* PriorityQueue.swift */; };
 		057C5C741CDA76DC0013C3E3 /* Lazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057C5C731CDA76DC0013C3E3 /* Lazy.swift */; };
+		057DB7421D2C259E005B6E32 /* NATableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057DB7411D2C259E005B6E32 /* NATableViewCell.swift */; };
 		05B469B51CD84FB400166473 /* Array-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B469B41CD84FB400166473 /* Array-Extension.swift */; };
 		05C680E71CFE205F00B41A45 /* Example22.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C680E61CFE205F00B41A45 /* Example22.swift */; };
 		05C680E91CFE237100B41A45 /* NALabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C680E81CFE237100B41A45 /* NALabel.swift */; };
@@ -113,6 +114,7 @@
 		0576BE481CDEDEA300BACC72 /* TestCommon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCommon.swift; sourceTree = "<group>"; };
 		057C5C711CD951590013C3E3 /* PriorityQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriorityQueue.swift; sourceTree = "<group>"; };
 		057C5C731CDA76DC0013C3E3 /* Lazy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lazy.swift; sourceTree = "<group>"; };
+		057DB7411D2C259E005B6E32 /* NATableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NATableViewCell.swift; sourceTree = "<group>"; };
 		05B469B41CD84FB400166473 /* Array-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array-Extension.swift"; sourceTree = "<group>"; };
 		05C680E61CFE205F00B41A45 /* Example22.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example22.swift; sourceTree = "<group>"; };
 		05C680E81CFE237100B41A45 /* NALabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NALabel.swift; sourceTree = "<group>"; };
@@ -277,6 +279,7 @@
 				05E3C6E61CEFBDE400BAFE1D /* NATextField.swift */,
 				05E3C6E81CEFC1E600BAFE1D /* NAButton.swift */,
 				05C680E81CFE237100B41A45 /* NALabel.swift */,
+				057DB7411D2C259E005B6E32 /* NATableViewCell.swift */,
 			);
 			path = SodiumCocoa;
 			sourceTree = "<group>";
@@ -552,6 +555,7 @@
 			files = (
 				05C680E91CFE237100B41A45 /* NALabel.swift in Sources */,
 				05E3C6E91CEFC1E600BAFE1D /* NAButton.swift in Sources */,
+				057DB7421D2C259E005B6E32 /* NATableViewCell.swift in Sources */,
 				05E3C6E71CEFBDE400BAFE1D /* NATextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
