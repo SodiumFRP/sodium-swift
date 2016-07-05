@@ -12,6 +12,8 @@ import SodiumSwift
 import SwiftCommon
 
 public class NALabel : UILabel {
+    var refs: MemReferences?
+
     public var txt: Cell<String> {
         didSet{
             self.l = Operational.updates(txt).listen ({ txt in
@@ -33,6 +35,10 @@ public class NALabel : UILabel {
     
     public init(txt: Cell<String>, refs: MemReferences? = nil ) {
         self.txt = txt //Cell<String>(value: text, refs: refs)
+        self.refs = refs
+        if let r = self.refs {
+            r.addRef()
+        }
         super.init(frame: CGRectZero)
     }
     
