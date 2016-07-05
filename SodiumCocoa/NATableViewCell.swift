@@ -8,6 +8,7 @@
 
 import Foundation
 import SodiumSwift
+import SwiftCommon
 
 public class NATableViewCell : UITableViewCell {
     private var hiddenListener: Listener?

@@ -8,6 +8,7 @@
 
 import UIKit
 import SodiumSwift
+import SwiftCommon
 
 public class NAButton : UIButton {
     private var txtListener: Listener?
