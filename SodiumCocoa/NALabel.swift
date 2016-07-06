@@ -16,11 +16,9 @@ public class NALabel : UILabel {
 
     public var txt: Cell<String> {
         didSet{
-            self.l = Operational.updates(txt).listen ({ txt in
-                gui() {
-                    self.text = txt
-                }
-            }, refs: self.refs)
+            self.l = Operational.updates(txt).listen(self.refs) { txt in
+                gui { self.text = txt }
+            }
             
             // Set the text at the end of the transaction so SLabel works
             // with CellLoops.

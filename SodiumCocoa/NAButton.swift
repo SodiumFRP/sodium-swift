@@ -11,25 +11,38 @@ import SodiumSwift
 import SwiftCommon
 
 public class NAButton : UIButton {
+    public typealias Title = (String, UIControlState)
+    private let empty : Title = ("", .Normal)
+    
+    let refs: MemReferences?
     private var txtListener: Listener?
 
-    public var txt: Cell<String> {
-        didSet{
-            self.txtListener = Operational.updates(txt).listen ({ txt in
-                gui() {
-                    self.setTitle(txt, forState: .Normal)
-                }
-            }, refs: self.refs)
+    public let clicked: StreamSink<Unit>
+    public var text: Title {
+        get {
+            return textCell.sample()
+        }
+        set(value) {
+            Transaction.run { trans in
+                Transaction.cantBeInSend()
+                self.textCell.stream().send(trans, a: value)
+            }
         }
     }
     
-    let refs: MemReferences?
-    public let clicked: StreamSink<Unit>
+    public var textCell: Cell<Title> {
+        didSet {
+            self.txtListener = Operational.updates(textCell).listen(self.refs) { txt in
+                gui { self.setTitle(txt.0, forState: txt.1) }
+            }
+        }
+    }
     
-    public convenience init(_ txt: Cell<String>, refs: MemReferences? = nil) {
+    
+    public convenience init(_ txt: Cell<Title>, refs: MemReferences? = nil) {
         self.init(type: .System, refs: refs)
         
-        self.txt = txt
+        self.textCell = txt
         self.layer.borderColor = UIColor.redColor().CGColor
         self.sizeToFit()
         self.addTarget(self, action: #selector(NAButton.onclicked), forControlEvents: .TouchUpInside)
@@ -50,14 +63,14 @@ public class NAButton : UIButton {
         if let r = self.refs {
             r.addRef()
         }
-        self.txt = Cell<String>(value: "", refs: nil)
+        self.textCell = Cell<Title>(value: empty, refs: refs)
         super.init(frame: CGRectMake(0,0,10,10))
     }
     
     required public init?(coder aDecoder: NSCoder) {
         self.refs = nil
         self.clicked = StreamSink<Unit>(refs: nil)
-        self.txt = Cell<String>(value: "", refs: nil)
+        self.textCell = Cell<Title>(value: empty, refs: nil)
         super.init(coder: aDecoder)
         
         self.layer.borderColor = UIColor.redColor().CGColor

@@ -2,7 +2,7 @@ import Foundation
 
 typealias Block = () -> Void
 typealias Action = () throws -> Void
-typealias TV = (Transaction) throws -> Void
+public typealias TV = (Transaction) throws -> Void
 public typealias OTV = (Transaction?) throws -> Void
 
 let nop: Block = {}
@@ -66,6 +66,12 @@ public final class Transaction
         return go { f() }!
     }
     
+    public static func cantBeInSend() {
+        if Transaction.inCallback > 0 {
+            fatalError("Send() may not be called inside a Sodium callback.")
+        }
+    }
+    
     /**
      Execute the specified function inside a single transaction.
 
@@ -79,7 +85,7 @@ public final class Transaction
         return go { try f() }
     }
 
-    internal static func run(code: TV) {
+    public static func run(code: TV) {
         go( { try code(startIfNecessary())})
     }
 

@@ -71,7 +71,7 @@ public class Stream<T>
      
      To ensure this `Listener` is disposed as soon as the stream it is listening to is either disposed, pass the returned listener to this stream's `AddCleanup` method.
      */
-    public func listen(handler: Handler, refs: MemReferences?) -> Listener
+    public func listen(refs: MemReferences? = nil, handler: Handler) -> Listener
     {
         var innerListener = self.listenWeak(handler)
         var ls = [Listener]()
@@ -150,10 +150,10 @@ public class Stream<T>
     public func listenOnce(handler: (T)->Void) -> Listener? {
         var ls = [Listener]()
         
-        ls.append(self.listen({ a in
+        ls.append(self.listen(self.refs) { a in
             handler(a)
             ls.first!.unlisten()
-        }, refs: self.refs))
+        })
         return ls.first!
     }
 

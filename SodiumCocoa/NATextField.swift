@@ -49,7 +49,7 @@ public class NATextField : UITextField {
     }
     
     private func listen() -> Listener? {
-        return self.userChanges.listen({ [weak self] text in self!.text = text }, refs: self.refs)
+        return self.userChanges.listen(self.refs) { [weak self] text in self!.text = text }
     }
     
     @objc private func textFieldDidChange(sender: UITextField) {

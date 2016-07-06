@@ -14,12 +14,10 @@ public class NATableViewCell : UITableViewCell {
     private var hiddenListener: Listener?
 
     public var hiddenState = Cell<Bool>(value: false, refs: nil) {
-        didSet{
-            self.hiddenListener = Operational.updates(hiddenState).listen ({ hidden in
-                gui() {
-                    self.hidden = hidden
-                }
-            }, refs: nil)
+        didSet {
+            self.hiddenListener = Operational.updates(hiddenState).listen { hidden in
+                gui { self.hidden = hidden }
+            }
         }
     }
  

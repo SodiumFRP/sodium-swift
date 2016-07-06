@@ -428,7 +428,7 @@ extension CellType {
      */
   
     public func listen(handler: Handler) -> Listener {
-        return Transaction.apply{trans in self.value(trans).listen(handler, refs: self.refs)}!
+        return Transaction.apply{trans in self.value(trans).listen(self.refs, handler: handler)}!
     }
 
     /**
