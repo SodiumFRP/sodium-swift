@@ -14,6 +14,15 @@ import SwiftCommon
 public class NALabel : UILabel {
     var refs: MemReferences?
 
+    private var hiddenListener: Listener?
+    public var hiddenState = Cell<Bool>(value: false) {
+        didSet {
+            self.hiddenListener = Operational.updates(hiddenState).listen { hidden in
+                gui { self.hidden = hidden }
+            }
+        }
+    }
+
     public var txt: Cell<String> {
         didSet{
             self.l = Operational.updates(txt).listen(self.refs) { txt in

@@ -1,5 +1,6 @@
 import UIKit
 import SodiumSwift
+import SwiftCommon
 
 /**
  ## Sodium TextField
@@ -48,6 +49,15 @@ public class NATextField : UITextField {
         print("NATextField deinit (should see Cell and Stream deinig)")
     }
     
+    private var hiddenListener: Listener?
+    public var hiddenState = Cell<Bool>(value: false) {
+        didSet {
+            self.hiddenListener = Operational.updates(hiddenState).listen { hidden in
+                gui { self.hidden = hidden }
+            }
+        }
+    }
+
     private func listen() -> Listener? {
         return self.userChanges.listen(self.refs) { [weak self] text in self!.text = text }
     }

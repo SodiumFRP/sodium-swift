@@ -11,9 +11,9 @@ import SodiumSwift
 import SwiftCommon
 
 public class NATableViewCell : UITableViewCell {
+    
     private var hiddenListener: Listener?
-
-    public var hiddenState = Cell<Bool>(value: false, refs: nil) {
+    public var hiddenState = Cell<Bool>(value: false) {
         didSet {
             self.hiddenListener = Operational.updates(hiddenState).listen { hidden in
                 gui { self.hidden = hidden }

@@ -14,6 +14,16 @@ public class NAButton : UIButton {
     public typealias Title = (String, UIControlState)
     private let empty : Title = ("", .Normal)
     
+    
+    private var hiddenListener: Listener?
+    public var hiddenState = Cell<Bool>(value: false) {
+        didSet {
+            self.hiddenListener = Operational.updates(hiddenState).listen { hidden in
+                gui { self.hidden = hidden }
+            }
+        }
+    }
+
     let refs: MemReferences?
     private var txtListener: Listener?
 
