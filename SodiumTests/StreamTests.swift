@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import Sodium
+@testable import SodiumSwift
 
 extension SodiumTests {
     
@@ -141,7 +141,43 @@ extension SodiumTests {
         l.unlisten()
         XCTAssert(["H","I"] == out, "testGate() failed \(out)")
     }
-    
+
+    func testGateAB() {
+        let cmd = StreamSink<Unit>()
+        let acell = CellSink(false)
+        let bcell = CellSink(true)
+        var out = [String]()
+        
+        let a = cmd.gate(acell).map { opt in return "A" }
+        let b = cmd.gate(bcell).map { opt in return "B" }
+        
+        let preferA = a.orElse(b)
+        
+        let l = preferA.listen{ out.append($0) }
+        
+        cmd.send(Unit.value)
+        l.unlisten()
+        XCTAssert(["B"] == out, "testGateAB() failed \(out)")
+    }
+
+    func testGates() {
+        let cmd = StreamSink<String>()
+        let acell = CellSink(false)
+        let bcell = CellSink(true)
+        var out = [String]()
+        
+        let a = cmd.gate(acell).map { _ in return "A" }
+        let b = cmd.gate(bcell).map { _ in return "B" }
+        
+        let preferA = a.orElse(b)
+        
+        let l = preferA.listen{ out.append($0) }
+        
+        cmd.send("Foo")
+        l.unlisten()
+        XCTAssert(["B"] == out, "testGates() failed \(out)")
+    }
+
     func testCollect()
     {
         let ea = StreamSink<Int>()

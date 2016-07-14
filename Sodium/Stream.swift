@@ -81,7 +81,7 @@ public class Stream<T>
                 objc_sync_enter(self!.lock)
                 defer { objc_sync_exit(self!.lock) }
 
-                innerListener!.unlisten()
+                innerListener?.unlisten()
 
                 if (ls.first != nil) {
                     self!.keepListenersAlive.stopKeepingListenerAlive(ls.first!)
@@ -230,7 +230,7 @@ public class Stream<T>
     public func map<TResult>(f: (T) -> TResult) -> Stream<TResult>
     {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
-        let l = self.listen(out.node, action: { [weak out] (trans2, a) in out!.send(trans2, a: f(a)) }, refs: self.refs )
+        let l = self.listen(out.node, action: { /*[weak out]*/ (trans2, a) in out.send(trans2, a: f(a)) }, refs: self.refs )
         return out.unsafeAddCleanup(l)
     }
 
@@ -299,10 +299,24 @@ public class Stream<T>
     public func snapshot<T1, TResult, C1 : CellType where C1.Element==T1>(c: C1, f: (T, T1) -> TResult) -> Stream<TResult> {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
         let l = self.listen(out.node, action: { (trans2, a) in
-            out.send(trans2, a: f(a, c.sampleNoTransaction()))
+
+            // T could really be U? so make sure we have a value using reflection
+            let fa = f(a, c.sampleNoTransaction())
+            let ref = Mirror(reflecting: fa)
+            
+            // if a is not Optional, just call handler
+            if ref.displayStyle != .Optional {
+                out.send(trans2, a: fa)
+            }
+            else if ref.children.count > 0 {
+                let (_, some) = ref.children.first!
+                out.send(trans2, a: some as! TResult)
+            }
+
         })
         return out.unsafeAddCleanup(l)
     }
+
 
     /**
      Return a stream whose events are the result of the combination using the specified function of the input stream's value and the value of the cells at the time of the stream event firing.

@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import Sodium
+@testable import SodiumSwift
 
 extension SodiumTests {
 
