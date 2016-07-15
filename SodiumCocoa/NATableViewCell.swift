@@ -13,7 +13,7 @@ import SwiftCommon
 public class NATableViewCell : UITableViewCell {
     
     private var hiddenListener: Listener?
-    public var hiddenState = Cell<Bool>(value: false) {
+    public var hiddenState: AnyCell<Bool> = AnyCell(Cell<Bool>(value: false)) {
         didSet {
             self.hiddenListener = Operational.updates(hiddenState).listen { hidden in
                 gui { self.hidden = hidden }
