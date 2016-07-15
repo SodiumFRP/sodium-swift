@@ -22,7 +22,7 @@ public struct AnyCell<T>: CellType {
     private let _sampleNoTransaction: () -> T
     private let _value: (Transaction) -> Stream<T>
     
-    init<Base: CellType where T == Base.Element>(_ base: Base) {
+    public init<Base: CellType where T == Base.Element>(_ base: Base) {
         _refs = base.refs
         _stream = base.stream
         _sample = base.sample
