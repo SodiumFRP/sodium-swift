@@ -462,40 +462,6 @@ public class Stream<T>
     }
 
     /**
-     Return a stream that only outputs events which have a different value than the previous event.
- 
-     - Returns:A stream that only outputs events which have a different value than the previous event.
-    */
-    /*
-extension on T:Comparable???
-public func calm() -> Stream<T> {
-        return self.Calm(EqualityComparer<T>.Default)
-    }
-
-
-    /*
-     *      Return a stream that only outputs events which have a different value than the previous event.
-     */
-     - Parameter comparer: The equality comparer to use to determine if two items are equal.
-     - Returns:A stream that only outputs events which have a different value than the previous event.
-    public func calm(IEqualityComparer<T> comparer) -> Stream<T> {
-        return self.Calm(Lazy<IMaybe<T>>(Maybe.Nothing<T>), comparer)
-    }
-
-    internal func calm(Lazy<IMaybe<T>> init, IEqualityComparer<T> comparer) -> Stream<T> {
-        return self.CollectLazy(init, (a, lastA) =>
-        {
-            if (lastA.Match(v => comparer.Equals(v, a), () => false))
-            {
-                return Tuple.Create(Maybe.Nothing<T>(), lastA)
-            }
-
-            IMaybe<T> ma = Maybe.Just(a)
-            return Tuple.Create(ma, ma)
-        }).FilterMaybe()
-    }
-*/
-    /**
      Transform a stream with a generalized state loop (a Mealy machine).  The function is passed the input and the old state and returns the new state and output value.
  
      - Parameter TState: The type of the state of the Mealy machine.
@@ -623,6 +589,50 @@ public func calm() -> Stream<T> {
             }
         }
     }
+}
+
+extension Stream where T:Equatable {
+    /**
+     Return a stream that only outputs events which have a different value than the previous event.
+     
+     - Returns:A stream that only outputs events which have a different value than the previous event.
+     */
+    public func calm() -> Stream<T?> {
+        return self.collectLazy(nil, f: { (a, lastA) -> (T?, T?) in
+            if (a == lastA) ?? false {
+                return (nil, a) // same, don't collect
+            }
+            else {
+                return (a, a)   // different (or nil lastA)
+            }
+        })
+    }
+    /*
+     
+     
+     /*
+     *      Return a stream that only outputs events which have a different value than the previous event.
+     */
+     - Parameter comparer: The equality comparer to use to determine if two items are equal.
+     - Returns:A stream that only outputs events which have a different value than the previous event.
+     public func calm(IEqualityComparer<T> comparer) -> Stream<T> {
+     return self.Calm(Lazy<IMaybe<T>>(Maybe.Nothing<T>), comparer)
+     }
+     
+     internal func calm(Lazy<IMaybe<T>> init, IEqualityComparer<T> comparer) -> Stream<T> {
+     return self.CollectLazy(init, (a, lastA) =>
+     {
+     if (lastA.Match(v => comparer.Equals(v, a), () => false))
+     {
+     return Tuple.Create(Maybe.Nothing<T>(), lastA)
+     }
+     
+     IMaybe<T> ma = Maybe.Just(a)
+     return Tuple.Create(ma, ma)
+     }).FilterMaybe()
+     }
+     */
+    
 }
 
 class ListenerImplementation<T> : Listener
