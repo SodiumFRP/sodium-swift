@@ -207,6 +207,22 @@ class SodiumTests: XCTestCase {
         XCTAssert(["1 5", "12 5", "12 6"] == out, "testList() failed \(out)")
     }
 
+    func testLift3()
+    {
+        let c1 = CellSink<Int>(1)
+        let c2 = CellSink<Int64>(5)
+        let c3 = CellSink<Int64>(6)
+        var out = Array<String>()
+        do {
+            let l = c1.lift(c2, c3: c3, f: {(x: Int, y: Int64, z: Int64) in x.description + " " + y.description + " " + z.description}).listen{ out.append($0) }
+            defer { l.unlisten() }
+            c1.send(12)
+            c2.send(6)
+            c3.send(8)
+        }
+        XCTAssert(["1 5 6", "12 5 6", "12 6 6", "12 6 8"] == out, "testList3() failed \(out)")
+    }
+
     func testLiftGlitch()
     {
         let c1 = CellSink<Int>(1)

@@ -16,7 +16,9 @@ public class NATableViewCell : UITableViewCell {
     public var hiddenState: AnyCell<Bool> = AnyCell(Cell<Bool>(value: false)) {
         didSet {
             self.hiddenListener = Operational.updates(hiddenState).listen { hidden in
-                gui { self.hidden = hidden }
+                gui {
+                    self.hidden = hidden
+                }
             }
         }
     }
