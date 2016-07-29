@@ -214,7 +214,8 @@ class SodiumTests: XCTestCase {
         let c3 = CellSink<Int64>(6)
         var out = Array<String>()
         do {
-            let l = c1.lift(c2, c3: c3, f: {(x: Int, y: Int64, z: Int64) in x.description + " " + y.description + " " + z.description}).listen{ out.append($0) }
+            let lifted = c1.lift(c2, c3: c3, f: {(x: Int, y: Int64, z: Int64) in x.description + " " + y.description + " " + z.description})
+            let l = lifted.listen{ out.append($0) }
             defer { l.unlisten() }
             c1.send(12)
             c2.send(6)

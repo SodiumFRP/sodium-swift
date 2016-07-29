@@ -18,7 +18,7 @@ public class NAButton : UIButton {
     private var hiddenListener: Listener?
     public var hiddenState = Cell<Bool>(value: false) {
         didSet {
-            self.hiddenListener = Operational.updates(hiddenState).listen { hidden in
+            self.hiddenListener = hiddenState.listen { hidden in
                 gui { self.hidden = hidden }
             }
         }
