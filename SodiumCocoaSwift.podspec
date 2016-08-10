@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SodiumCocoaSwift"
-  s.version      = "0.2.6"
+  s.version      = "0.2.17"
   s.summary      = "Sodium library for Swift Cocoa controls."
   s.description  = <<-DESC
     Sodium FRP library for Cocoa controls.
