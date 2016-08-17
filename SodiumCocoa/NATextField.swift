@@ -41,6 +41,7 @@ public class NATextField : UITextField {
     }
     
     required public init?(coder aDecoder: NSCoder) {
+        self.txt = CellSink<String>("", refs: self.refs)
         super.init(coder: aDecoder)
         self.l = self.listen()
 
