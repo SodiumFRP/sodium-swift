@@ -42,6 +42,10 @@ public class NATextField : UITextField {
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        self.l = self.listen()
+
+        // Add a "textFieldDidChange" notification method to the text field control.
+        self.addTarget(self, action: #selector(NATextField.textFieldDidChange), forControlEvents:UIControlEvents.EditingChanged)
     }
 
     deinit {
