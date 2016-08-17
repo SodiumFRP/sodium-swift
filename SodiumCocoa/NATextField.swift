@@ -43,6 +43,7 @@ public class NATextField : UITextField {
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.txt = CellSink<String>("", refs: self.refs)
+        self.userChanges = txt.stream() // didSet doesn't work in init()
         self.l = self.listen()
 
         // Add a "textFieldDidChange" notification method to the text field control.
