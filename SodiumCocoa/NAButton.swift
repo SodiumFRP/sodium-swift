@@ -13,8 +13,19 @@ import SwiftCommon
 public class NAButton : UIButton {
     public typealias Title = (String, UIControlState)
     private let empty : Title = ("", .Normal)
-    
-    
+
+    private var enabledListener: Listener?
+    public var enabledState = Cell<Bool>(value: false) {
+        didSet {
+            self.enabledListener = enabledState.listen { enabled in
+                gui {
+                    // we set disabled text color in init
+                    self.enabled = enabled
+                }
+            }
+        }
+    }
+
     private var hiddenListener: Listener?
     public var hiddenState = Cell<Bool>(value: false) {
         didSet {
@@ -82,8 +93,8 @@ public class NAButton : UIButton {
         self.clicked = StreamSink<Unit>(refs: nil)
         self.textCell = Cell<Title>(value: empty, refs: nil)
         super.init(coder: aDecoder)
-        
-        self.layer.borderColor = UIColor.redColor().CGColor
+     
+        self.setTitleColor(UIColor.lightTextColor(), forState: .Disabled)
         self.addTarget(self, action: #selector(NAButton.onclicked), forControlEvents: .TouchUpInside)
     }
     
