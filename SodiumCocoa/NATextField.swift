@@ -41,8 +41,8 @@ public class NATextField : UITextField {
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        self.txt = CellSink<String>("", refs: self.refs)
         super.init(coder: aDecoder)
+        self.txt = CellSink<String>("", refs: self.refs)
         self.l = self.listen()
 
         // Add a "textFieldDidChange" notification method to the text field control.
