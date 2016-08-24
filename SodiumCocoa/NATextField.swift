@@ -48,7 +48,7 @@ public class NATextField : UITextField {
                     //self.check.alpha = CGFloat(float(on))
                     self.pathLayer!.strokeEnd = on ? 0.5 : 0.0
                 })
-
+                self.pathLayer!.strokeEnd = on ? 0.5 : 0.0
             }
         }
     }
