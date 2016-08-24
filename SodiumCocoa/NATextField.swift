@@ -44,7 +44,7 @@ public class NATextField : UITextField {
 //                    self.pathLayer!.removeAnimationForKey("strokeEnd")
 //                    self.pathLayer!.addAnimation(pathAnimation, forKey: "strokeEnd")
                 //}
-                UIView.animateWithDuration(0.72, animations: {
+                UIView.animateWithDuration(1.72, animations: {
                     //self.check.alpha = CGFloat(float(on))
                     self.pathLayer!.strokeEnd = on.toFloat()
                 })
