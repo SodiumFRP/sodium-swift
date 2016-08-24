@@ -33,16 +33,17 @@ public class NATextField : UITextField {
                     //Add the layer to your view's layer
                     self.layer.addSublayer(self.pathLayer!)
                 }
+                else {
+                    // animate the second time through
+                    let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
+                    pathAnimation.duration = 0.72
+                    pathAnimation.fromValue = NSNumber(float: (!on).toFloat())
+                    pathAnimation.toValue = NSNumber(float: on.toFloat())
                 
-                //This is basic animation, quite a few other methods exist to handle animation see the reference site answers
-                let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
-                pathAnimation.duration = 0.72
-                pathAnimation.fromValue = NSNumber(float: on ? 0.0 : 1.0)
-                pathAnimation.toValue = NSNumber(float: on ? 1.0 : 0.0)
-            
-                //Animation will happen right away
-                self.pathLayer!.strokeEnd = on ? 1.0 : 0.0
-                self.pathLayer!.addAnimation(pathAnimation, forKey: "strokeEnd")
+                    //Animation will happen right away
+                    self.pathLayer!.addAnimation(pathAnimation, forKey: "strokeEnd")
+                }
+                self.pathLayer!.strokeEnd = on.toFloat()
             }
         }
     }
