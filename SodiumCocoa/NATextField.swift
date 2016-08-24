@@ -12,7 +12,7 @@ import SwiftCommon
 public class NATextField : UITextField {
     var refs: MemReferences?
     
-    public var greenUnderline = Cell<Bool>(false) {
+    public var greenUnderline = Cell<Bool>(value: false) {
         didSet {
             self.underlineListener = self.greenUnderline.listen{ on in
                 if on {
