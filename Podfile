@@ -6,5 +6,6 @@ platform :ios, '8.0'
 
 target 'SodiumCocoa' do
     pod 'SwiftCommon'
+    pod 'SwiftCommonIOS'
 end
 

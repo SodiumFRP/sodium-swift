@@ -1,6 +1,7 @@
 import UIKit
 import SodiumSwift
 import SwiftCommon
+import SwiftCommonIOS
 
 /**
  ## Sodium TextField
@@ -29,7 +30,7 @@ public class NATextField : UITextField {
                     pathLayer.lineJoin = kCALineJoinBevel
                     
                     //Add the layer to your view's layer
-                    self.email.layer.addSublayer(pathLayer)
+                    self.layer.addSublayer(pathLayer)
                     
                     //This is basic animation, quite a few other methods exist to handle animation see the reference site answers
                     let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
