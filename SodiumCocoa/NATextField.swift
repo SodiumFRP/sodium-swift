@@ -12,7 +12,37 @@ import SwiftCommon
 public class NATextField : UITextField {
     var refs: MemReferences?
     
-    public var greenUnderline = Cell<Bool>(false)
+    public var greenUnderline = Cell<Bool>(false) {
+        didSet {
+            self.underlineListener = self.greenUnderline.listen{ on in
+                if on {
+                    let path: UIBezierPath = UIBezierPath()
+                    path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
+                    path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
+                    
+                    let pathLayer = CAShapeLayer()
+                    pathLayer.frame = self.bounds
+                    pathLayer.path = path.CGPath
+                    pathLayer.strokeColor = UIColor.fromHex(0x2EE39E).CGColor
+                    pathLayer.fillColor = nil
+                    pathLayer.lineWidth = 2.0 * UIScreen.mainScreen().scale
+                    pathLayer.lineJoin = kCALineJoinBevel
+                    
+                    //Add the layer to your view's layer
+                    self.email.layer.addSublayer(pathLayer)
+                    
+                    //This is basic animation, quite a few other methods exist to handle animation see the reference site answers
+                    let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
+                    pathAnimation.duration = 0.8
+                    pathAnimation.fromValue = NSNumber(float: 0.0)
+                    pathAnimation.toValue = NSNumber(float: 1.0)
+                    //Animation will happen right away
+                    pathLayer.addAnimation(pathAnimation, forKey: "strokeEnd")
+                }
+            }
+        }
+    }
+
     private var underlineListener: Listener?
     
     public var txt = CellSink<String>("") {
@@ -40,32 +70,6 @@ public class NATextField : UITextField {
         self.l = self.listen()
         self.text = text
         
-        self.underlineListener = self.greenUnderline.listen{ on in
-            if on {
-                let path: UIBezierPath = UIBezierPath()
-                path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
-                path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
-                
-                let pathLayer = CAShapeLayer()
-                pathLayer.frame = self.bounds
-                pathLayer.path = path.CGPath
-                pathLayer.strokeColor = UIColor.fromHex(0x2EE39E).CGColor
-                pathLayer.fillColor = nil
-                pathLayer.lineWidth = 2.0 * UIScreen.mainScreen().scale
-                pathLayer.lineJoin = kCALineJoinBevel
-                
-                //Add the layer to your view's layer
-                self.email.layer.addSublayer(pathLayer)
-                
-                //This is basic animation, quite a few other methods exist to handle animation see the reference site answers
-                let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
-                pathAnimation.duration = 0.8
-                pathAnimation.fromValue = NSNumber(float: 0.0)
-                pathAnimation.toValue = NSNumber(float: 1.0)
-                //Animation will happen right away
-                pathLayer.addAnimation(pathAnimation, forKey: "strokeEnd")
-            }
-        }
         // Add a "textFieldDidChange" notification method to the text field control.
         self.addTarget(self, action: #selector(NATextField.textFieldDidChange), forControlEvents:UIControlEvents.EditingChanged)
     }
