@@ -35,16 +35,20 @@ public class NATextField : UITextField {
                 }
                 //else {
                     // animate the second time through
-                    let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
-                    pathAnimation.duration = 1.52
-                    pathAnimation.fromValue = NSNumber(float: (!on).toFloat())
-                    pathAnimation.toValue = NSNumber(float: on.toFloat())
-                
-                    //Animation will happen right away
-                    self.pathLayer!.removeAnimationForKey("strokeEnd")
-                    self.pathLayer!.addAnimation(pathAnimation, forKey: "strokeEnd")
+//                    let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
+//                    pathAnimation.duration = 1.52
+//                    pathAnimation.fromValue = NSNumber(float: (!on).toFloat())
+//                    pathAnimation.toValue = NSNumber(float: on.toFloat())
+//                
+//                    //Animation will happen right away
+//                    self.pathLayer!.removeAnimationForKey("strokeEnd")
+//                    self.pathLayer!.addAnimation(pathAnimation, forKey: "strokeEnd")
                 //}
-                self.pathLayer!.strokeEnd = on.toFloat()
+                UIView.animateWithDuration(0.72, animations: {
+                    //self.check.alpha = CGFloat(float(on))
+                    self.pathLayer!.strokeEnd = on.toFloat()
+                })
+
             }
         }
     }
