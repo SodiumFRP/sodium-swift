@@ -41,6 +41,7 @@ public class NATextField : UITextField {
                     pathAnimation.toValue = NSNumber(float: on.toFloat())
                 
                     //Animation will happen right away
+                    self.pathLayer!.removeAnimationForKey("strokeEnd")
                     self.pathLayer!.addAnimation(pathAnimation, forKey: "strokeEnd")
                 //}
                 self.pathLayer!.strokeEnd = on.toFloat()
