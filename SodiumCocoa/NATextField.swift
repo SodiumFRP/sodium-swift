@@ -17,28 +17,32 @@ public class NATextField : UITextField {
         didSet {
             self.underlineListener = self.greenUnderline.listen{ on in
                 if on {
-                let path: UIBezierPath = UIBezierPath()
-                path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
-                path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
+                    let path: UIBezierPath = UIBezierPath()
+                    path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
+                    path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
+                    
+                    let pathLayer = CAShapeLayer()
+                    pathLayer.frame = self.bounds
+                    pathLayer.path = path.CGPath
+                    pathLayer.strokeColor = UIColor.fromHex(0x2EE39E).CGColor
+                    pathLayer.fillColor = nil
+                    pathLayer.lineWidth = 2.0 * UIScreen.mainScreen().scale
+                    pathLayer.lineJoin = kCALineJoinBevel
+                    
+                    //Add the layer to your view's layer
+                    self.layer.addSublayer(pathLayer)
+                    
+                    //This is basic animation, quite a few other methods exist to handle animation see the reference site answers
+                    let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
+                    pathAnimation.duration = 0.5
+                    pathAnimation.fromValue = NSNumber(float: 0.0)
+                    pathAnimation.toValue = NSNumber(float: 1.0)
                 
-                let pathLayer = CAShapeLayer()
-                pathLayer.frame = self.bounds
-                pathLayer.path = path.CGPath
-                pathLayer.strokeColor = UIColor.fromHex(0x2EE39E).CGColor
-                pathLayer.fillColor = nil
-                pathLayer.lineWidth = 2.0 * UIScreen.mainScreen().scale
-                pathLayer.lineJoin = kCALineJoinBevel
-                
-                //Add the layer to your view's layer
-                self.layer.addSublayer(pathLayer)
-                
-                //This is basic animation, quite a few other methods exist to handle animation see the reference site answers
-                let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
-                pathAnimation.duration = 0.5
-                pathAnimation.fromValue = NSNumber(float: 1.0)
-                pathAnimation.toValue = NSNumber(float: 0.0)
-                //Animation will happen right away
-                pathLayer.addAnimation(pathAnimation, forKey: "strokeEnd")
+                    CATransaction.begin()
+                    //Animation will happen right away
+                    pathLayer.addAnimation(pathAnimation, forKey: "strokeEnd")
+                    CATransaction.setCompletionBlock{ pathLayer.removeFromSuperlayer() }
+                    CATransaction.commit()
                 }
             }
         }
