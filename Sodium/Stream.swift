@@ -607,6 +607,23 @@ extension Stream where T:Equatable {
             }
         }))
     }
+
+    /**
+     Return a stream that only outputs events which have a different value than the previous event.
+     
+     - Returns:A stream that only outputs events which have a different value than the previous event.
+     */
+    public func calm(last: T) -> Stream<T> {
+        return Stream.filterMaybe(self.collectLazy(last, f: { (a, lastA) -> (T?, T?) in
+            if (a == lastA) ?? false {
+                return (nil, a) // same, don't collect
+            }
+            else {
+                return (a, a)   // different (or nil lastA)
+            }
+        }))
+    }
+
     /*
      
      

@@ -424,6 +424,49 @@ class SodiumTests: XCTestCase {
         XCTAssert(true == calledBack[0], "testTransaction() failed")
     }
 
+    func testCalmStream()
+    {
+        let s = StreamSink<Int>()
+        var out = [Int]()
+        do
+        {
+            let l = s.calm().listen{ out.append($0) }
+            defer { l.unlisten() }
+            s.send(2)
+            s.send(2)
+            s.send(4)
+            s.send(4)
+            s.send(2)
+            s.send(4)
+            s.send(4)
+            s.send(2)
+            s.send(2)
+        }
+        XCTAssert([2, 4, 2, 4, 2] == out, "testCalmStream() failed \(out)")
+    }
+
+    func testCalm()
+    {
+        let c = CellSink<Int>(2)
+        var out = [Int]()
+        do
+        {
+            let l = c.calm().listen{ out.append($0) }
+            defer { l.unlisten() }
+            c.send(2)
+            c.send(2)
+            c.send(2)
+            c.send(4)
+            c.send(4)
+            c.send(2)
+            c.send(4)
+            c.send(4)
+            c.send(2)
+            c.send(2)
+        }
+        XCTAssert([2, 4, 2, 4, 2] == out, "testCalm() failed \(out)")
+    }
+
     /*
 
     [Test]
@@ -469,26 +512,6 @@ public async Task TestListenOnceTask()
 [Test]
 [Test]
 [Test]
-func testCalm()
-{
-    let c = CellSink<Int>(2)
-    Array<Int> @out = Array<Int>()
-    using (Transaction.Run(() => c.Calm().Listen{ out.append($0) }))
-    {
-    defer { l.Unlisten() }
-        c.Send(2)
-        c.Send(2)
-        c.Send(4)
-        c.Send(2)
-        c.Send(4)
-        c.Send(4)
-        c.Send(2)
-        c.Send(2)
-    }
-    XCTAssert([] == out, "test() failed \(out)")
-    CollectionAssert.AreEqual(new[] { 2, 4, 2, 4, 2 }, @out)
-}
-
 [Test]
 func testCalm2()
 {

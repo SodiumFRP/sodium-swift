@@ -58,7 +58,7 @@ public class LazyCell<T> : CellType
     
 
     public func stream() -> Stream<T> {
-        return Stream<T>()
+        return self._stream
     }
     public func sample() -> T {
         return self._value

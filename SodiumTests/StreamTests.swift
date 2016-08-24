@@ -19,7 +19,7 @@ extension SodiumTests {
         l.unlisten()
         XCTAssert([5] == out, "testSendStream() failed \(out)")
         e.send(6)
-        XCTAssert([5] == out, "testSendStream() failed \(out)")
+        XCTAssert([5,6] == out, "testSendStream() failed \(out)")
     }
 
     func testMapTo()
