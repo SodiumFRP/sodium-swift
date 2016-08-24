@@ -40,9 +40,10 @@ public class NATextField : UITextField {
                     let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
                     pathAnimation.duration = 0.5
                     pathAnimation.fromValue = NSNumber(float: 0.0)
-                    pathAnimation.toValue = NSNumber(float: 5.0)
+                    pathAnimation.toValue = NSNumber(float: 0.5)
                 
                     //Animation will happen right away
+                    //self.pathLayer!.strokeEnd = 0.5
                     self.pathLayer!.addAnimation(pathAnimation, forKey: "strokeEnd")
                 }
             }
