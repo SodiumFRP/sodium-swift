@@ -46,7 +46,7 @@ public class NATextField : UITextField {
                 //}
                 UIView.animateWithDuration(1.72, animations: {
                     //self.check.alpha = CGFloat(float(on))
-                    self.pathLayer!.strokeEnd = on.toFloat()
+                    self.pathLayer!.strokeEnd = on ? 0.5 : 0.0
                 })
 
             }
