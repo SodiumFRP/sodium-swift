@@ -14,7 +14,7 @@ public class NATextField : UITextField {
     var refs: MemReferences?
     var pathLayer: CAShapeLayer?
     
-    public var greenUnderline = Cell<Bool>(value: false) {
+    public var greenUnderline = AnyCell<Bool>(Cell<Bool>(value: false)) {
         didSet {
             self.underlineListener = self.greenUnderline.listen{ on in
                 if on {

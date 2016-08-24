@@ -15,7 +15,7 @@ public class NAButton : UIButton {
     private let empty : Title = ("", .Normal)
 
     private var enabledListener: Listener?
-    public var enabledState = Cell<Bool>(value: false) {
+    public var enabledState = AnyCell<Bool>(Cell<Bool>(value: false)) {
         didSet {
             self.enabledListener = enabledState.listen { enabled in
                 gui {
@@ -27,7 +27,7 @@ public class NAButton : UIButton {
     }
 
     private var hiddenListener: Listener?
-    public var hiddenState = Cell<Bool>(value: false) {
+    public var hiddenState = AnyCell<Bool>(Cell<Bool>(value: false)) {
         didSet {
             self.hiddenListener = hiddenState.listen { hidden in
                 gui { self.hidden = hidden }
