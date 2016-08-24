@@ -36,7 +36,7 @@ public class NATextField : UITextField {
                 else {
                     // animate the second time through
                     let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
-                    pathAnimation.duration = 0.72
+                    pathAnimation.duration = 1.52
                     pathAnimation.fromValue = NSNumber(float: (!on).toFloat())
                     pathAnimation.toValue = NSNumber(float: on.toFloat())
                 
