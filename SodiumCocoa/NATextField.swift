@@ -19,21 +19,21 @@ public class NATextField : UITextField {
             self.underlineListener = self.greenUnderline.listen{ on in
                 if on {
                     
-                    if pathLayer == nil {
+                    if self.pathLayer == nil {
                         let path: UIBezierPath = UIBezierPath()
                         path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
                         path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
                         
-                        pathLayer = CAShapeLayer()
-                        pathLayer.frame = self.bounds
-                        pathLayer.path = path.CGPath
-                        pathLayer.strokeColor = UIColor.fromHex(0x2EE39E).CGColor
-                        pathLayer.fillColor = nil
-                        pathLayer.lineWidth = 2.0 * UIScreen.mainScreen().scale
-                        pathLayer.lineJoin = kCALineJoinBevel
+                        self.pathLayer = CAShapeLayer()
+                        self.pathLayer!.frame = self.bounds
+                        self.pathLayer!.path = path.CGPath
+                        self.pathLayer!.strokeColor = UIColor.fromHex(0x2EE39E).CGColor
+                        self.pathLayer!.fillColor = nil
+                        self.pathLayer!.lineWidth = 2.0 * UIScreen.mainScreen().scale
+                        self.pathLayer!.lineJoin = kCALineJoinBevel
 
                         //Add the layer to your view's layer
-                        self.layer.addSublayer(pathLayer)
+                        self.layer.addSublayer(self.pathLayer!)
                     }
                     
                     //This is basic animation, quite a few other methods exist to handle animation see the reference site answers
@@ -43,7 +43,7 @@ public class NATextField : UITextField {
                     pathAnimation.toValue = NSNumber(float: 5.0)
                 
                     //Animation will happen right away
-                    pathLayer.addAnimation(pathAnimation, forKey: "strokeEnd")
+                    self.pathLayer!.addAnimation(pathAnimation, forKey: "strokeEnd")
                 }
             }
         }
