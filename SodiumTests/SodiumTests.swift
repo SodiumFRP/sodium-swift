@@ -466,6 +466,29 @@ class SodiumTests: XCTestCase {
         }
         XCTAssert([2, 4, 2, 4, 2] == out, "testCalm() failed \(out)")
     }
+    
+    func testMapCalm()
+    {
+        let c = CellSink<Int>(2)
+        var out = [Bool]()
+        do
+        {
+            let l = c.map{ $0 % 2 == 0 }.calm().listen{ out.append($0) }
+            //let l = c.calm().listen{ out.append($0) }
+            defer { l.unlisten() }
+            c.send(2)
+            c.send(2)
+            c.send(2)
+            c.send(4)
+            c.send(4)
+            c.send(2)
+            c.send(4)
+            c.send(4)
+            c.send(5)
+            c.send(5)
+        }
+        XCTAssert([true, false] == out, "testMapCalm() failed \(out)")
+    }
 
     /*
 

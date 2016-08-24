@@ -17,35 +17,32 @@ public class NATextField : UITextField {
     public var greenUnderline = AnyCell<Bool>(Cell<Bool>(value: false)) {
         didSet {
             self.underlineListener = self.greenUnderline.listen{ on in
-                if on {
+                if self.pathLayer == nil {
+                    let path: UIBezierPath = UIBezierPath()
+                    path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
+                    path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
                     
-                    if self.pathLayer == nil {
-                        let path: UIBezierPath = UIBezierPath()
-                        path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
-                        path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
-                        
-                        self.pathLayer = CAShapeLayer()
-                        self.pathLayer!.frame = self.bounds
-                        self.pathLayer!.path = path.CGPath
-                        self.pathLayer!.strokeColor = UIColor.fromHex(0x2EE39E).CGColor
-                        self.pathLayer!.fillColor = nil
-                        self.pathLayer!.lineWidth = 2.0 * UIScreen.mainScreen().scale
-                        self.pathLayer!.lineJoin = kCALineJoinBevel
+                    self.pathLayer = CAShapeLayer()
+                    self.pathLayer!.frame = self.bounds
+                    self.pathLayer!.path = path.CGPath
+                    self.pathLayer!.strokeColor = UIColor.fromHex(0x2EE39E).CGColor
+                    self.pathLayer!.fillColor = nil
+                    self.pathLayer!.lineWidth = 2.0 * UIScreen.mainScreen().scale
+                    self.pathLayer!.lineJoin = kCALineJoinBevel
 
-                        //Add the layer to your view's layer
-                        self.layer.addSublayer(self.pathLayer!)
-                    }
-                    
-                    //This is basic animation, quite a few other methods exist to handle animation see the reference site answers
-                    let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
-                    pathAnimation.duration = 0.5
-                    pathAnimation.fromValue = NSNumber(float: 0.0)
-                    pathAnimation.toValue = NSNumber(float: 0.5)
-                
-                    //Animation will happen right away
-                    self.pathLayer!.strokeEnd = 0.5
-                    self.pathLayer!.addAnimation(pathAnimation, forKey: "strokeEnd")
+                    //Add the layer to your view's layer
+                    self.layer.addSublayer(self.pathLayer!)
                 }
+                
+                //This is basic animation, quite a few other methods exist to handle animation see the reference site answers
+                let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
+                pathAnimation.duration = 0.5
+                pathAnimation.fromValue = NSNumber(float: on ? 0.0 : 1.0)
+                pathAnimation.toValue = NSNumber(float: on ? 1.0 : 0.0)
+            
+                //Animation will happen right away
+                self.pathLayer!.strokeEnd = on ? 1.0 : 0.0
+                self.pathLayer!.addAnimation(pathAnimation, forKey: "strokeEnd")
             }
         }
     }
