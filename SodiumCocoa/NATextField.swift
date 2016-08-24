@@ -33,7 +33,7 @@ public class NATextField : UITextField {
                     //Add the layer to your view's layer
                     self.layer.addSublayer(self.pathLayer!)
                 }
-                else {
+                //else {
                     // animate the second time through
                     let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
                     pathAnimation.duration = 1.52
@@ -42,7 +42,7 @@ public class NATextField : UITextField {
                 
                     //Animation will happen right away
                     self.pathLayer!.addAnimation(pathAnimation, forKey: "strokeEnd")
-                }
+                //}
                 self.pathLayer!.strokeEnd = on.toFloat()
             }
         }
