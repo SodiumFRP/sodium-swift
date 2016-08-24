@@ -455,3 +455,14 @@ extension CellType {
         return initial.merge(self.stream(), f: { $1 })
     }
 }
+
+extension CellType where Element : Equatable {
+    public func calm() -> AnyCell<Element>
+    {
+        return Transaction.apply { trans in
+            let lz = self.sampleLazy(trans)
+            return self.stream().calm().holdLazy(trans, lazy: lz)
+        }
+    }
+   
+}

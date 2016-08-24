@@ -597,15 +597,15 @@ extension Stream where T:Equatable {
      
      - Returns:A stream that only outputs events which have a different value than the previous event.
      */
-    public func calm() -> Stream<T?> {
-        return self.collectLazy(nil, f: { (a, lastA) -> (T?, T?) in
+    public func calm() -> Stream<T> {
+        return Stream.filterMaybe(self.collectLazy(nil, f: { (a, lastA) -> (T?, T?) in
             if (a == lastA) ?? false {
                 return (nil, a) // same, don't collect
             }
             else {
                 return (a, a)   // different (or nil lastA)
             }
-        })
+        }))
     }
     /*
      
@@ -633,6 +633,24 @@ extension Stream where T:Equatable {
      }
      */
     
+    /// <summary>
+    ///     Return a stream that only outputs events that have values, removing the <see cref="IMaybe{T}" /> wrapper, and
+    ///     discarding <see cref="Maybe.Nothing{T}()" /> values.
+    /// </summary>
+    /// <param name="s">The stream of <see cref="IMaybe{T}" /> values to filter.</param>
+    /// <returns>
+    ///     A stream that only outputs events that have values, removing the <see cref="IMaybe{T}" /> wrapper, and
+    ///     discarding <see cref="Maybe.Nothing{T}()" /> values.
+    /// </returns>
+    public static func filterMaybe<T>(s: Stream<T?>) -> Stream<T> {
+        let out = Stream<T>(keepListenersAlive: s.keepListenersAlive)
+        let l = s.listen(out.node, action: { (trans2, a) in
+            if a != nil { out.send(trans2, a: a!)
+            }})
+        
+        return out.unsafeAddCleanup(l)
+    }
+
 }
 
 class ListenerImplementation<T> : Listener
