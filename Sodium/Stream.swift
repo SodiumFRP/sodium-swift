@@ -457,7 +457,7 @@ public class Stream<T>
      - Parameter c: The cell that acts as a gate.
      - Returns: A stream that only outputs events from the input stream when the specified cell's value is **true**.
     */
-    public func gate(c: Cell<Bool>) -> Stream<T?> {
+    public func gate<C : CellType where C.Element == Bool>(c: C) -> Stream<T?> {
         return self.snapshot(c, f: {(a: T, pred: Bool) -> T? in return pred ? a : nil })
     }
 
