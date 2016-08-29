@@ -50,6 +50,8 @@ public class NATextField : UITextField {
         path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
         
         self.pathLayer = CAShapeLayer()
+        super.init(frame: frame)
+
         self.pathLayer.frame = self.bounds
         self.pathLayer.path = path.CGPath
         self.pathLayer.strokeColor = UIColor.clearColor().CGColor
@@ -60,8 +62,6 @@ public class NATextField : UITextField {
         //Add the layer to your view's layer
         self.layer.addSublayer(self.pathLayer)
 
-        super.init(frame: frame)
-        
         self.l = self.listen()
         self.text = text
         
