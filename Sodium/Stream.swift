@@ -457,8 +457,8 @@ public class Stream<T>
      - Parameter c: The cell that acts as a gate.
      - Returns: A stream that only outputs events from the input stream when the specified cell's value is **true**.
     */
-    public func gate<C : CellType where C.Element == Bool>(c: C) -> Stream<T?> {
-        return self.snapshot(c, f: {(a: T, pred: Bool) -> T? in return pred ? a : nil })
+    public func gate<C : CellType where C.Element == Bool>(c: C) -> Stream<T> {
+        return self.snapshot(c, f: {(a: T, pred: Bool) -> T? in return pred ? a : nil }).filterOptional()
     }
 
     /**
@@ -589,6 +589,36 @@ public class Stream<T>
             }
         }
     }
+}
+
+
+public protocol OptionalType {
+    associatedtype T
+    var asOptional: T? {get}
+}
+extension Optional: OptionalType {
+    public var asOptional: Wrapped? {return self}
+}
+
+extension SequenceType where Generator.Element: OptionalType {
+    var flatMapped: [Generator.Element.T] {
+        return self.flatMap {$0.asOptional}
+    }
+}
+
+extension Stream where T:OptionalType {
+
+    public func filterOptional() -> Stream<T.T> {
+        let out = Stream<T.T>(keepListenersAlive: self.keepListenersAlive)
+        let l = self.listen(out.node, action: { (trans2, a) in
+            let opt = a.asOptional
+            if opt != nil { out.send(trans2, a: opt!)
+            }
+        })
+        
+        return out.unsafeAddCleanup(l)
+    }
+
 }
 
 extension Stream where T:Equatable {
