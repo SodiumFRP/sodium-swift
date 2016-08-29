@@ -14,7 +14,7 @@ public class NATextField : UITextField {
     var refs: MemReferences?
     var pathLayer: CAShapeLayer
     
-    public var underlineColor : CGColor {
+    public var underlineColor : CGColor? {
         get {
             return self.pathLayer.strokeColor
         }
