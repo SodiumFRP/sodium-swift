@@ -47,21 +47,6 @@ public class NATextField : UITextField {
         self.pathLayer = CAShapeLayer()
         super.init(frame: frame)
 
-        // setup underline
-        let path: UIBezierPath = UIBezierPath()
-        path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
-        path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
-
-        self.pathLayer.frame = self.bounds
-        self.pathLayer.path = path.CGPath
-        self.pathLayer.strokeColor = UIColor.clearColor().CGColor
-        self.pathLayer.fillColor = nil
-        self.pathLayer.lineWidth = 2.0 * UIScreen.mainScreen().scale
-        self.pathLayer.lineJoin = kCALineJoinBevel
-        
-        //Add the layer to your view's layer
-        self.layer.addSublayer(self.pathLayer)
-
         self.l = self.listen()
         self.text = text
         
@@ -70,7 +55,10 @@ public class NATextField : UITextField {
     }
     
     required public init?(coder aDecoder: NSCoder) {
+        self.pathLayer = CAShapeLayer()
+
         super.init(coder: aDecoder)
+        
         self.txt = CellSink<String>("", refs: self.refs)
         self.userChanges = txt.stream() // didSet doesn't work in init()
         self.l = self.listen()
@@ -82,6 +70,23 @@ public class NATextField : UITextField {
     deinit {
         if let r = self.refs { r.release() }
         print("NATextField deinit (should see Cell and Stream deinig)")
+    }
+    
+    private func setupUnderline() {
+        // setup underline
+        let path: UIBezierPath = UIBezierPath()
+        path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
+        path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
+        
+        self.pathLayer.frame = self.bounds
+        self.pathLayer.path = path.CGPath
+        self.pathLayer.strokeColor = UIColor.clearColor().CGColor
+        self.pathLayer.fillColor = nil
+        self.pathLayer.lineWidth = 2.0 * UIScreen.mainScreen().scale
+        self.pathLayer.lineJoin = kCALineJoinBevel
+        
+        //Add the layer to your view's layer
+        self.layer.addSublayer(self.pathLayer)
     }
     
     private var hiddenListener: Listener?
