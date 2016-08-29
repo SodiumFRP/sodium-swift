@@ -72,7 +72,7 @@ public class NATextField : UITextField {
         print("NATextField deinit (should see Cell and Stream deinig)")
     }
     
-    private func setupUnderline() {
+    public func setupUnderline() {
         // setup underline
         let path: UIBezierPath = UIBezierPath()
         path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
