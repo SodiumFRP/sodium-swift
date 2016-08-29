@@ -12,48 +12,16 @@ import SwiftCommonIOS
  */
 public class NATextField : UITextField {
     var refs: MemReferences?
-    var pathLayer: CAShapeLayer?
+    var pathLayer: CAShapeLayer
     
-    public var greenUnderline = AnyCell<Bool>(Cell<Bool>(value: false)) {
-        didSet {
-            self.underlineListener = self.greenUnderline.listen{ on in
-                if self.pathLayer == nil {
-                    let path: UIBezierPath = UIBezierPath()
-                    path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
-                    path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
-                    
-                    self.pathLayer = CAShapeLayer()
-                    self.pathLayer!.frame = self.bounds
-                    self.pathLayer!.path = path.CGPath
-                    self.pathLayer!.strokeColor = UIColor.fromHex(0x2EE39E).CGColor
-                    self.pathLayer!.fillColor = nil
-                    self.pathLayer!.lineWidth = 2.0 * UIScreen.mainScreen().scale
-                    self.pathLayer!.lineJoin = kCALineJoinBevel
-
-                    //Add the layer to your view's layer
-                    self.layer.addSublayer(self.pathLayer!)
-                }
-                //else {
-                    // animate the second time through
-//                    let pathAnimation: CABasicAnimation = CABasicAnimation(keyPath:"strokeEnd")
-//                    pathAnimation.duration = 1.52
-//                    pathAnimation.fromValue = NSNumber(float: (!on).toFloat())
-//                    pathAnimation.toValue = NSNumber(float: on.toFloat())
-//                
-//                    //Animation will happen right away
-//                    self.pathLayer!.removeAnimationForKey("strokeEnd")
-//                    self.pathLayer!.addAnimation(pathAnimation, forKey: "strokeEnd")
-                //}
-                UIView.animateWithDuration(1.72, animations: {
-                    //self.check.alpha = CGFloat(float(on))
-                    self.pathLayer!.strokeEnd = on ? 0.5 : 0.0
-                })
-                self.pathLayer!.strokeEnd = on ? 0.5 : 0.0
-            }
+    public var underlineColor : CGColor {
+        get {
+            return self.pathLayer!.strokeColor
+        }
+        set (value) {
+            self.pathLayer!.strokeColor = value
         }
     }
-
-    private var underlineListener: Listener?
     
     public var txt = CellSink<String>("") {
         didSet{
@@ -75,6 +43,23 @@ public class NATextField : UITextField {
         self.txt = CellSink<String>(text, refs: refs)
         self.refs = refs
         if let r = self.refs { r.addRef() }
+        
+        // setup underline
+        let path: UIBezierPath = UIBezierPath()
+        path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
+        path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
+        
+        self.pathLayer = CAShapeLayer()
+        self.pathLayer.frame = self.bounds
+        self.pathLayer.path = path.CGPath
+        self.pathLayer.strokeColor = UIColor.clearColor().CGColor
+        self.pathLayer.fillColor = nil
+        self.pathLayer.lineWidth = 2.0 * UIScreen.mainScreen().scale
+        self.pathLayer.lineJoin = kCALineJoinBevel
+        
+        //Add the layer to your view's layer
+        self.layer.addSublayer(self.pathLayer)
+
         super.init(frame: frame)
         
         self.l = self.listen()
