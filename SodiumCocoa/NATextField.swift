@@ -44,13 +44,13 @@ public class NATextField : UITextField {
         self.refs = refs
         if let r = self.refs { r.addRef() }
         
+        self.pathLayer = CAShapeLayer()
+        super.init(frame: frame)
+
         // setup underline
         let path: UIBezierPath = UIBezierPath()
         path.moveToPoint(CGPointMake(0.0, self.frame.size.height))
         path.addLineToPoint(CGPointMake(self.frame.size.width, self.frame.size.height))
-        
-        self.pathLayer = CAShapeLayer()
-        super.init(frame: frame)
 
         self.pathLayer.frame = self.bounds
         self.pathLayer.path = path.CGPath
