@@ -84,6 +84,7 @@ public class NATextField : UITextField {
         self.pathLayer.fillColor = nil
         self.pathLayer.lineWidth = 2.0 * UIScreen.mainScreen().scale
         self.pathLayer.lineJoin = kCALineJoinBevel
+        self.pathLayer.strokeEnd = 1.0
         
         //Add the layer to your view's layer
         self.layer.addSublayer(self.pathLayer)
