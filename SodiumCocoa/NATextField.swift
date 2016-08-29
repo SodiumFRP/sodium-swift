@@ -16,10 +16,10 @@ public class NATextField : UITextField {
     
     public var underlineColor : CGColor {
         get {
-            return self.pathLayer!.strokeColor
+            return self.pathLayer.strokeColor
         }
         set (value) {
-            self.pathLayer!.strokeColor = value
+            self.pathLayer.strokeColor = value
         }
     }
     
