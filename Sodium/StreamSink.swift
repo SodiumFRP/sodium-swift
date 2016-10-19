@@ -3,12 +3,12 @@
 
  - Parameter T: The type of values fired by the stream.
  */
-public class StreamSink<T> : Stream<T>
+open class StreamSink<T> : Stream<T>
 {
     typealias Action = (Transaction, T) -> Void
     
-    private var coalescer: Action = { _,_ in }
-    private let fold: (T,T)->T
+    fileprivate var coalescer: Action = { _,_ in }
+    fileprivate let fold: (T,T)->T
    
     /// Construct a StreamSink that uses the last value if `Send` is called more than once per transaction.
     public convenience override init(refs: MemReferences? = nil)
@@ -22,7 +22,7 @@ public class StreamSink<T> : Stream<T>
      Construct a StreamSink that uses
      - Parameter fold: to combine values if `send` is called more than once per transaction.
      */
-    init(fold: (T,T) -> T, refs: MemReferences? = nil)
+    init(fold: @escaping (T,T) -> T, refs: MemReferences? = nil)
     {
         self.fold = fold
         super.init(refs: refs)
@@ -35,7 +35,7 @@ public class StreamSink<T> : Stream<T>
 
      - Parameter a: The value to send.
     */
-    public func send(a: T) {
+    open func send(_ a: T) {
         Transaction.run(
         {
             trans in

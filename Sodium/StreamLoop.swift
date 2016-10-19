@@ -4,10 +4,10 @@ import Foundation
  A forward reference for a `Stream<T>` equivalent to the `Stream<T>` that is referenced.
  - Parameter T: The type of values fired by the stream.
  */
-public class StreamLoop<T> : Stream<T>
+open class StreamLoop<T> : Stream<T>
 {
-    private let isAssignedLock = NSObject()
-    private var _isAssigned = false
+    fileprivate let isAssignedLock = NSObject()
+    fileprivate var _isAssigned = false
 
     /**
      Create an `StreamLoop<T>`.  This must be called from within a transaction.
@@ -37,7 +37,7 @@ public class StreamLoop<T> : Stream<T>
  
      - Parameter stream: The stream that was forward referenced.
     */
-    public func loop(stream: Stream<T>) {
+    open func loop(_ stream: Stream<T>) {
         objc_sync_enter(self.isAssignedLock)
         defer { objc_sync_exit(self.isAssignedLock) }
 
@@ -48,7 +48,7 @@ public class StreamLoop<T> : Stream<T>
         self._isAssigned = true
 
         Transaction.runVoid {
-            self.unsafeAddCleanup(stream.listen(self.node, action: self.send))
+            let _ = self.unsafeAddCleanup(stream.listen(self.node, action: self.send))
             stream.keepListenersAlive.use(self.keepListenersAlive)
         }
     }

@@ -143,7 +143,7 @@ extension SodiumTests {
     }
 
     func testGateAB() {
-        let cmd = StreamSink<Unit>()
+        let cmd = StreamSink<SodiumSwift.Unit>()
         let acell = CellSink(false)
         let bcell = CellSink(true)
         var out = [String]()

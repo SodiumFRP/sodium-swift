@@ -7,9 +7,9 @@
 */
 extension String {
     var isUpperCase: Bool {
-        return self == self.uppercaseString
+        return self == self.uppercased()
     }
     var isLowerCase: Bool {
-        return self == self.lowercaseString
+        return self == self.lowercased()
     }
 }

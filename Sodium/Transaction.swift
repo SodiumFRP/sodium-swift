@@ -14,21 +14,21 @@ let nop: Block = {}
 public final class Transaction
 {
     // Coarse-grained lock that's held during the whole transaction.
-    private static let transactionLock = NSObject()
+    fileprivate static let transactionLock = NSObject()
     
-    private static var currentTransaction: Transaction?
-    private static var OnStartHooks = Array<Action>()
-    private static var runningOnStartHooks: Bool = false
+    fileprivate static var currentTransaction: Transaction?
+    fileprivate static var OnStartHooks = Array<Action>()
+    fileprivate static var runningOnStartHooks: Bool = false
 
-    private var entries = Set<Entry>()
-    private var lastQueue = Array<Action>()
-    private var postQueue = Dictionary<Int, OTV>()
+    fileprivate var entries = Set<Entry>()
+    fileprivate var lastQueue = Array<Action>()
+    fileprivate var postQueue = Dictionary<Int, OTV>()
 
-    private let prioritizedQueue = PriorityQueue<Entry>(comparator: >)
+    fileprivate let prioritizedQueue = PriorityQueue<Entry>(comparator: >)
     static var inCallback = 0
     
     // True if we need to re-generate the priority queue.
-    private var toRegen = false
+    fileprivate var toRegen = false
 
     init() {
     }
@@ -58,11 +58,11 @@ public final class Transaction
      
      - Remarks: In most cases this is not needed, because all primitives will create their own transaction automatically.  It is useful for running multiple reactive operations atomically.
      */
-    internal static func runVoid(action: Action) {
+    internal static func runVoid(_ action: Action) {
         go { try action() }
     }
 
-    public static func noThrowRun<T>(f: () -> T) -> T {
+    public static func noThrowRun<T>(_ f: () -> T) -> T {
         return go { f() }!
     }
     
@@ -80,16 +80,16 @@ public final class Transaction
      - Returns: The return value of `f`.
      - Remarks: In most cases this is not needed, because all primitives will create their own transaction automatically. It is useful for running multiple reactive operations atomically.
      */
-    public static func run<T>(f: () throws -> T) -> T?
+    public static func run<T>(_ f: () throws -> T) -> T?
     {
         return go { try f() }
     }
 
-    public static func run(code: TV) {
+    public static func run(_ code: TV) {
         go( { try code(startIfNecessary())})
     }
 
-    static func go<R>(code: () throws -> R) -> R? {
+    static func go<R>(_ code: () throws -> R) -> R? {
         objc_sync_enter(transactionLock)
         defer { objc_sync_exit(transactionLock) }
         
@@ -124,11 +124,11 @@ public final class Transaction
         return nil
     }
 
-    internal static func apply<T>(code: (Transaction) -> T) -> T {
+    internal static func apply<T>(_ code: (Transaction) -> T) -> T {
         return go { code(startIfNecessary()) }!
     }
 
-    internal static func apply<T>(code: (Transaction) throws -> T) -> T? {
+    internal static func apply<T>(_ code: (Transaction) throws -> T) -> T? {
         return go { try code(startIfNecessary()) }
     }
 
@@ -138,14 +138,14 @@ public final class Transaction
      - Parameter action:
      - Remarks: The action may start transactions itself, which will not cause the hooks to execute recursively.  The main use case of this is for the implementation of a time/alarm system.
      */
-    internal static func onStart(action: Action) {
+    internal static func onStart(_ action: @escaping Action) {
         objc_sync_enter(transactionLock)
         defer { objc_sync_exit(transactionLock) }
 
         OnStartHooks.append(action)
     }
 
-    private static func startIfNecessary() -> Transaction {
+    fileprivate static func startIfNecessary() -> Transaction {
         if (currentTransaction == nil) {
             if (!runningOnStartHooks) {
                 runningOnStartHooks = true
@@ -164,7 +164,7 @@ public final class Transaction
         return currentTransaction!
     }
 
-    internal func prioritized(rank: INode, action: TV) {
+    internal func prioritized(_ rank: INode, action: @escaping TV) {
         let e = Entry(rank: rank, action: action)
         self.prioritizedQueue.push(e)
         self.entries.insert(e)
@@ -175,7 +175,7 @@ public final class Transaction
  
      - Parameter action: The action to run after all prioritized actions.
     */
-    internal func last(action: Action) {
+    internal func last(_ action: @escaping Action) {
         self.lastQueue.append(action)
     }
 
@@ -185,7 +185,7 @@ public final class Transaction
      - Parameter index: The order index in which to run the action.
      - Parameter action: The action to run after all last actions.
      */
-    internal func post(index: Int, action: OTV) {
+    internal func post(_ index: Int, action: @escaping OTV) {
         // If an entry exists already, combine the old one with the new one.
         var a = action
         if let existing = self.postQueue[index] {
@@ -203,7 +203,7 @@ public final class Transaction
 
      - Parameter action: The action to run after the current transaction is closed or immediately if there is no current transaction.
      */
-    public static func post(action: OTV) {
+    public static func post(_ action: @escaping OTV) {
         // -1 will mean it runs before anything split/deferred, and will run outside a transaction context.
         // TODO: make enum for post
         self.run { trans in trans.post(-1, action: action) }
@@ -214,7 +214,7 @@ public final class Transaction
     }
 
     /// If the priority queue has entries in it when we modify any of the nodes' ranks, then we need to re-generate it to make sure it's up-to-date.
-    private func checkRegen() {
+    fileprivate func checkRegen() {
         if (self.toRegen) {
             self.toRegen = false
             self.prioritizedQueue.removeAll()
@@ -286,7 +286,7 @@ public final class Transaction
         
         var hashValue: Int { return Int(seq) }
 
-        init(rank: INode, action: TV) {
+        init(rank: INode, action: @escaping TV) {
             self.rank = rank
             self.action = action
             self.seq = OSAtomicAdd64(1, &nextSeq)

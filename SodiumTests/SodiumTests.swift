@@ -23,7 +23,7 @@ class SodiumTests: XCTestCase {
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measureBlock {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }
@@ -258,13 +258,13 @@ class SodiumTests: XCTestCase {
         var out = [Int]()
         
         do {
-            let l = Transaction.run{ Operational.value(c).listenOnce{ out.append($0) } }!!
+            let l = Transaction.run{ Operational.value(c).listenOnce{ out.append($0) } }!
             defer { l.unlisten() }
 
             c.send(2)
             c.send(7)
         }
-        XCTAssert([9] == out, "testListenOnce() failed")
+        XCTAssert([9] == out, "testListenOnce() failed; out = \(out)")
     }
 
     func testUpdates()
@@ -283,7 +283,7 @@ class SodiumTests: XCTestCase {
     
     func testApply()
     {
-        let cf = CellSink<Int64->String>({ (x:Int64) in "1 " + x.description})
+        let cf = CellSink<(Int64)->String>({ (x:Int64) in "1 " + x.description})
         let ca = CellSink<Int64>(5)
         var out = Array<String>()
         

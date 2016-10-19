@@ -7,7 +7,7 @@ internal class INode : NSObject, Comparable
     // Fine-grained lock that protects listeners and nodes.
     internal static let ListenersLock = NSObject()
 
-    private var _rank: Int64
+    fileprivate var _rank: Int64
 
     internal init(rank: Int64) {
         self._rank = rank
@@ -15,7 +15,7 @@ internal class INode : NSObject, Comparable
 
     internal var rank: Int64 { return self._rank }
 
-    internal static func ensureBiggerThan(node: INode, limit: Int64, inout visited: Set<INode>) -> Bool {
+    internal static func ensureBiggerThan(_ node: INode, limit: Int64, visited: inout Set<INode>) -> Bool {
         if (node.rank > limit || visited.contains(node))
         {
             return false
@@ -64,7 +64,7 @@ internal class Node<T> : INode
 {
     typealias Action = (Transaction, T) -> Void
     
-    private var listeners = Array<NodeTarget<T>>()
+    fileprivate var listeners = Array<NodeTarget<T>>()
 
     internal override init(rank: Int64)
     {
@@ -78,7 +78,7 @@ internal class Node<T> : INode
      - Parameter target: The target node to link to this node.
      - Returns: A tuple containing whether or not changes were made to the node rank and the `target` object created for this link.
      */
-    internal func link(action: Action, target: INode) -> (Bool, NodeTarget<T>) {
+    internal func link(_ action: @escaping Action, target: INode) -> (Bool, NodeTarget<T>) {
         objc_sync_enter(INode.ListenersLock)
         defer { objc_sync_exit(INode.ListenersLock) }
 
@@ -89,7 +89,7 @@ internal class Node<T> : INode
         return (changed, t)
     }
 
-    internal func unlink(target: NodeTarget<T>)
+    internal func unlink(_ target: NodeTarget<T>)
     {
         self.removeListener(target)
     }
@@ -103,7 +103,7 @@ internal class Node<T> : INode
         return self.listeners
     }
 
-    internal func removeListener(target: NodeTarget<T>) {
+    internal func removeListener(_ target: NodeTarget<T>) {
         objc_sync_enter(INode.ListenersLock)
         defer { objc_sync_exit(INode.ListenersLock) }
 
@@ -125,7 +125,7 @@ class NodeTarget<T> : INode.Target
     
     internal var action: Action
     
-    internal init(action: Action, node: INode)
+    internal init(action: @escaping Action, node: INode)
     {
         self.action = action
         super.init(node: node)

@@ -3,9 +3,9 @@
 
  - Parameter T: The type of values in the cell.
  */
-public class CellSink<T> : Cell<T>
+open class CellSink<T> : Cell<T>
 {
-    private let streamSink: StreamSink<T>
+    fileprivate let streamSink: StreamSink<T>
 
     /**
      Construct a writable cell that uses the last value if `send` is called more than once per transaction.
@@ -24,12 +24,12 @@ public class CellSink<T> : Cell<T>
      - Parameter initialValue: The initial value of the cell.
      - Parameter coalesce: Function to combine values when `send` is called more than once per transaction.
     */
-    public convenience init(initialValue: T, coalesce: (T,T) -> T, refs: MemReferences? = nil)
+    public convenience init(initialValue: T, coalesce: @escaping (T,T) -> T, refs: MemReferences? = nil)
     {
         self.init(streamSink: StreamSink<T>(fold: coalesce), initialValue: initialValue, refs: refs)
     }
 
-    private init(streamSink: StreamSink<T>, initialValue: T, refs: MemReferences? = nil) {
+    fileprivate init(streamSink: StreamSink<T>, initialValue: T, refs: MemReferences? = nil) {
         self.streamSink = streamSink
         super.init(stream: streamSink, initialValue: initialValue, refs: refs)
     }
@@ -39,5 +39,5 @@ public class CellSink<T> : Cell<T>
      
      - Parameter a: The value to send.
     */
-    public func send(a: T) { self.streamSink.send(a) }
+    open func send(_ a: T) { self.streamSink.send(a) }
 }

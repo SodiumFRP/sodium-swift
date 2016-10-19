@@ -8,21 +8,21 @@ public protocol CellType {
     
     func stream() -> Stream<Element>
     func sample() -> Element
-    func sampleLazy(trans: Transaction) -> Lazy<Element>
+    func sampleLazy(_ trans: Transaction) -> Lazy<Element>
     func sampleNoTransaction() -> Element
-    func value(trans: Transaction) -> Stream<Element>
+    func value(_ trans: Transaction) -> Stream<Element>
 }
 
 
 public struct AnyCell<T>: CellType {
-    private let _refs: MemReferences?
-    private let _stream: () -> Stream<T>
-    private let _sample: () -> T
-    private let _sampleLazy: (Transaction)->Lazy<T>
-    private let _sampleNoTransaction: () -> T
-    private let _value: (Transaction) -> Stream<T>
+    fileprivate let _refs: MemReferences?
+    fileprivate let _stream: () -> Stream<T>
+    fileprivate let _sample: () -> T
+    fileprivate let _sampleLazy: (Transaction)->Lazy<T>
+    fileprivate let _sampleNoTransaction: () -> T
+    fileprivate let _value: (Transaction) -> Stream<T>
     
-    public init<Base: CellType where T == Base.Element>(_ base: Base) {
+    public init<Base: CellType>(_ base: Base) where T == Base.Element {
         _refs = base.refs
         _stream = base.stream
         _sample = base.sample
@@ -39,13 +39,13 @@ public struct AnyCell<T>: CellType {
     public func sample() -> T {
         return _sample()
     }
-    public func sampleLazy(trans: Transaction) -> Lazy<T> {
+    public func sampleLazy(_ trans: Transaction) -> Lazy<T> {
         return _sampleLazy(trans)
     }
     public func sampleNoTransaction() -> T {
         return _sampleNoTransaction()
     }
-    public func value(trans: Transaction) -> Stream<T> {
+    public func value(_ trans: Transaction) -> Stream<T> {
         return _value(trans)
     }
 }
@@ -55,11 +55,11 @@ public struct AnyCell<T>: CellType {
 
     - Parameter T: The type of the value.
  */
-public class CellBase<T> : CellType {
+open class CellBase<T> : CellType {
     internal let _stream: Stream<T>
-    private var _value: T
-    private var _valueUpdate: T?
-    public var refs: MemReferences?
+    fileprivate var _value: T
+    fileprivate var _valueUpdate: T?
+    open var refs: MemReferences?
     
     /**
         Creates a cell with a constant value.
@@ -70,7 +70,7 @@ public class CellBase<T> : CellType {
  
         - Returns: A cell with a constant value.
      */
-    public static func constant<T>(value: T, refs: MemReferences? = nil) -> Cell<T> {
+    open static func constant<T>(_ value: T, refs: MemReferences? = nil) -> Cell<T> {
         return Cell<T>(value: value, refs: refs)
     }
     
@@ -82,7 +82,7 @@ public class CellBase<T> : CellType {
  
         - Returns: A cell with a lazily computed constant value.
     */
-    public static func constantLazy<TResult>(@autoclosure(escaping) value: () -> TResult) -> AnyCell<TResult>
+    open static func constantLazy<TResult>( _ value: @autoclosure @escaping () -> TResult) -> AnyCell<TResult>
     {
         return Stream<TResult>.never().holdLazy(value)
     }
@@ -151,10 +151,10 @@ public class CellBase<T> : CellType {
             For example, a b.Sample() inside an explicit transaction along with a b.Updates().Listen(...) will 
             capture the current value and any updates without risk of missing any in between.
      */
-    public func sample() -> T {
+    open func sample() -> T {
         return  Transaction.apply{ trans in self.sampleNoTransaction() }
     }
-    public func stream() -> Stream<T> {
+    open func stream() -> Stream<T> {
         return self._stream
     }
 
@@ -166,7 +166,7 @@ public class CellBase<T> : CellType {
      
         - SeeAlso: `Stream<T>.HoldLazy(Lazy<T>)`
      */
-    public func sampleLazy(trans: Transaction) -> Lazy<T> {
+    open func sampleLazy(_ trans: Transaction) -> Lazy<T> {
         let s = LazySample(cell: self)
         trans.last(
             {
@@ -176,13 +176,13 @@ public class CellBase<T> : CellType {
         return Lazy(f: { s.value ?? s.cell.sample() })
     }
 
-    public func sampleNoTransaction() -> T
+    open func sampleNoTransaction() -> T
     {
         let t = self.ValueProperty
         return t
     }
 
-    internal func updates(trans: Transaction?) -> Stream<T> { return self.stream() }
+    internal func updates(_ trans: Transaction?) -> Stream<T> { return self.stream() }
 
     /**
      Listen for updates to the value of this cell.  The returned `Listener` may be disposed to stop listening, or it will automatically stop listening when it is garbage collected.
@@ -196,7 +196,7 @@ public class CellBase<T> : CellType {
      
      If the `Listener` is not disposed, it will continue to listen until this cell is either disposed or garbage collected or the listener itself is garbage collected.
      */
-    public func listenWeak(handler: (T) -> Void) -> Listener {
+    open func listenWeak(_ handler: @escaping (T) -> Void) -> Listener {
         return Transaction.apply { trans in self.value(trans).listenWeak(handler)}
     }
 
@@ -243,8 +243,8 @@ private class LazySample<C:CellType>
  The class hierarchy comes because you can create a closure that uses an uninitialized self.
  CellBase<> has all the data, and we just have the cleanup closure to take care of.
  */
-public class Cell<T>: CellBase<T> {
-    private var cleanup: Listener = Listener(unlisten: nop, refs: nil)
+open class Cell<T>: CellBase<T> {
+    fileprivate var cleanup: Listener = Listener(unlisten: nop, refs: nil)
 
     public override init(value: T, refs: MemReferences? = nil) {
         super.init (value: value, refs: refs)
@@ -256,7 +256,7 @@ public class Cell<T>: CellBase<T> {
         self.cleanup = doListen(refs)
     }
     
-    private func doListen(refs: MemReferences?) -> Listener {
+    fileprivate func doListen(_ refs: MemReferences?) -> Listener {
         return Transaction.apply { trans1 in
             self.stream().listen(Node<Element>.Null, trans: trans1, action: { [weak self] (trans2, a) in
                 if self!._valueUpdate == nil {
@@ -278,7 +278,7 @@ public class Cell<T>: CellBase<T> {
 }
 
 extension CellType {
-    public typealias Handler = Element -> Void
+    public typealias Handler = (Element) -> Void
     
     /**
      Lift a binary function into cells, so the returned Cell always reflects the specified function applied to the input cells' values.
@@ -289,7 +289,7 @@ extension CellType {
      - Parameter c2: The second cell.
      - Returns: A cell containing values resulting from the binary function applied to the input cells' values.
      */
-    public func lift<C:CellType, TResult>(c2: C, f: (Element,C.Element) -> TResult) -> AnyCell<TResult> {
+    public func lift<C:CellType, TResult>(_ c2: C, f: @escaping (Element,C.Element) -> TResult) -> AnyCell<TResult> {
         let ffa = { a in { b in f(a,b) }}
         return c2.apply(self.map(ffa))
     }
@@ -306,7 +306,7 @@ extension CellType {
      
      - Returns: A cell containing values resulting from the ternary function applied to the input cells' values.
      */
-    public func lift<C2:CellType, C3: CellType, TResult>(c2: C2, c3: C3, f: (Element,C2.Element,C3.Element) -> TResult) -> AnyCell<TResult>
+    public func lift<C2:CellType, C3: CellType, TResult>(_ c2: C2, c3: C3, f: @escaping (Element,C2.Element,C3.Element) -> TResult) -> AnyCell<TResult>
     {
         let ffa = { a in { b in { c in f(a,b,c) }}}
         return c3.apply(c2.apply(self.map(ffa)))
@@ -325,7 +325,7 @@ extension CellType {
      - Parameter c4: The fourth cell.
      - Returns: A cell containing values resulting from the quaternary function applied to the input cells' values.
      */
-    public func lift<C2:CellType, C3:CellType, C4:CellType, TResult>(c2: C2, c3: C3, c4: C4, f: (Element,C2.Element,C3.Element,C4.Element) -> TResult) -> AnyCell<TResult>
+    public func lift<C2:CellType, C3:CellType, C4:CellType, TResult>(_ c2: C2, c3: C3, c4: C4, f: @escaping (Element,C2.Element,C3.Element,C4.Element) -> TResult) -> AnyCell<TResult>
     {
         let ffa = { a in { b in { c in { d in f(a,b,c,d) }}}}
         return c4.apply(c3.apply(c2.apply(self.map(ffa))))
@@ -346,7 +346,7 @@ extension CellType {
      - Parameter c5: The fifth cell.
      - Returns: A cell containing values resulting from the 5-argument function applied to the input cells' values.
      */
-    public func lift<C2:CellType, C3:CellType, C4:CellType, C5:CellType, TResult>(c2: C2, c3: C3, c4: C4, c5: C5, f: (Element,C2.Element,C3.Element,C4.Element,C5.Element)->TResult) -> AnyCell<TResult>
+    public func lift<C2:CellType, C3:CellType, C4:CellType, C5:CellType, TResult>(_ c2: C2, c3: C3, c4: C4, c5: C5, f: @escaping (Element,C2.Element,C3.Element,C4.Element,C5.Element)->TResult) -> AnyCell<TResult>
     {
         let ffa = { a in { b in { c in { d in { e in f(a,b,c,d,e) }}}}}
         return c5.apply(c4.apply(c3.apply(c2.apply(self.map(ffa)))))
@@ -369,7 +369,7 @@ extension CellType {
      - Parameter c6: The sixth cell.
      - Returns: A cell containing values resulting from the 6-argument function applied to the input cells' values.
      */
-    public func lift<C2:CellType, C3:CellType, C4:CellType, C5:CellType, C6:CellType, TResult>(c2: C2, c3: C3, c4: C4, c5: C5, c6: C6, f: (Element,C2.Element,C3.Element,C4.Element,C5.Element,C6.Element)->TResult) -> AnyCell<TResult>
+    public func lift<C2:CellType, C3:CellType, C4:CellType, C5:CellType, C6:CellType, TResult>(_ c2: C2, c3: C3, c4: C4, c5: C5, c6: C6, f: @escaping (Element,C2.Element,C3.Element,C4.Element,C5.Element,C6.Element)->TResult) -> AnyCell<TResult>
     {
         let ffa = { a in { b in { c in { d in { e in { _f in f(a,b,c,d,e,_f) }}}}}}
         return c6.apply(c5.apply(c4.apply(c3.apply(c2.apply(self.map(ffa))))))
@@ -383,7 +383,7 @@ extension CellType {
      - Parameter bf: The cell containing the function to apply the value to.
      - Returns: A cell whose value is the result of applying the current function in cell `bf` to this cell's current value.
      */
-    public func apply<TResult, C:CellType where C.Element == Element->TResult>(bf: C) -> AnyCell<TResult> {
+    public func apply<TResult, C:CellType>(_ bf: C) -> AnyCell<TResult> where C.Element == (Element)->TResult {
         return Transaction.apply{ trans0 in
             let out = Stream<TResult>(keepListenersAlive: self.stream().keepListenersAlive)
             
@@ -427,7 +427,7 @@ extension CellType {
      If the Listener is not disposed, it will continue to listen until this cell is disposed.
      */
   
-    public func listen(handler: Handler) -> Listener {
+    public func listen(_ handler: @escaping Handler) -> Listener {
         return Transaction.apply{trans in self.value(trans).listen(self.refs, handler: handler)}!
     }
 
@@ -439,7 +439,7 @@ extension CellType {
     
      - Returns: An cell which fires values transformed by f() for each value fired by this cell.
      */
-    public func map<TResult>(f: (Element) -> TResult) -> Cell<TResult>
+    public func map<TResult>(_ f: @escaping (Element) -> TResult) -> Cell<TResult>
     {
         let rt = Transaction.apply{ (trans: Transaction) in
             self.stream().map(f).hold(f(self.sample())) }
@@ -447,7 +447,7 @@ extension CellType {
         return rt
     }
     
-    public func value(trans1: Transaction) -> Stream<Element> {
+    public func value(_ trans1: Transaction) -> Stream<Element> {
         let spark = Stream<Unit>(keepListenersAlive: self.stream().keepListenersAlive)
         trans1.prioritized(spark.node) { trans2 in spark.send(trans2, a: Unit.value)}
         let initial = spark.snapshot(self)

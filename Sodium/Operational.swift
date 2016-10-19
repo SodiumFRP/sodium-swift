@@ -1,4 +1,4 @@
-public class Operational
+open class Operational
 {
     /**
      A stream that gives the updates/steps for a cell.
@@ -8,7 +8,7 @@ public class Operational
      - Returns:
      - Remarks: This is an **OPERATIONAL** primitive, which is not part of the main Sodium API.  It breaks the property of non-detectability of cell steps/updates.  The rule with this primitive is that you should only use it in functions that do not allow the caller to detect the cell updates.
      */
-    public static func updates<C:CellType>(c: C) -> Stream<C.Element> {
+    open static func updates<C:CellType>(_ c: C) -> Stream<C.Element> {
         return c.stream()
     }
 
@@ -20,7 +20,7 @@ public class Operational
      - Returns:
      - Remarks: This is an **OPERATIONAL** primitive, which is not part of the main Sodium API.  It breaks the property of non-detectability of cell steps/updates.  The rule with this primitive is that you should only use it in functions that do not allow the caller to detect the cell updates.
      */
-    public static func value<C:CellType>(c: C) -> Stream<C.Element> {
+    open static func value<C:CellType>(_ c: C) -> Stream<C.Element> {
         return Transaction.apply(c.value)
     }
 
@@ -31,7 +31,7 @@ public class Operational
      - Parameter s: The stream to defer.
      - Returns: A stream firing the deferred event firings.
     */
-    static func Defer<T>(s: Stream<T>) -> Stream<T>
+    static func Defer<T>(_ s: Stream<T>) -> Stream<T>
     {
         return split(s.map{ [$0] })
     }
@@ -44,7 +44,7 @@ public class Operational
      - Parameter s: The stream to split.
      - Returns: A stream firing the split event firings.
      */
-    static func split<T, S: SequenceType where S.Generator.Element == T>(s: Stream<S>) -> Stream<T>
+    static func split<T, S: Sequence>(_ s: Stream<S>) -> Stream<T> where S.Iterator.Element == T
     {
         let out = Stream<T>(keepListenersAlive: s.keepListenersAlive)
         let l1 = s.listen(out.node, action: { (trans, aa) in

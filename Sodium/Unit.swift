@@ -7,7 +7,7 @@ public final class Unit: Equatable
     /// The singleton value of type `Unit`.
     public static let value = Unit()
 
-    private init() {
+    fileprivate init() {
     }
 
     var hashValue : Int { return 1 }

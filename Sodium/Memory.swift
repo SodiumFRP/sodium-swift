@@ -1,25 +1,24 @@
-//
-//  Memory.swift
-//  Sodium
-//
-//  Created by Andrew Bradnan on 5/20/16.
-//  Copyright © 2016 Whirlygig Ventures. All rights reserved.
-//
+/**
+ #  Memory.swift
+##  Sodium
 
-import Foundation
+ - Author: Andrew Bradnan
+ - Date: 5/20/16
+ - Copyright: © 2016 Whirlygig Ventures. All rights reserved.
+*/
 
-public class MemReferences {
+open class MemReferences {
     var _count: Int
     public init() {
         self._count = 0
     }
     
-    public func count() -> Int { return self._count }
+    open func count() -> Int { return self._count }
     
-    public func addRef() {
+    open func addRef() {
         self._count += 1
     }
-    public func release() {
+    open func release() {
         self._count -= 1
     }
 }

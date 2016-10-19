@@ -1,21 +1,20 @@
-//
-//  Lazy.swift
-//  Sodium
-//
-//  Created by Andrew Bradnan on 5/4/16.
-//  Copyright © 2016 Whirlygig Ventures. All rights reserved.
-//
+/**
+ #  Lazy.swift
+##  Sodium
 
-import Foundation
+ - Author: Andrew Bradnan
+ - Date: 5/4/16
+ - Copyright: © 2016 Whirlygig Ventures. All rights reserved.
+*/
 
 /**
  A representation for a value that may not be available until the current transaction is closed.
  */
-public class Lazy<A> {
+open class Lazy<A> {
 
-    public init(f: () -> A) { self.f = f; }
+    public init(f: @escaping () -> A) { self.f = f; }
     public init(a: A) { self.f = { a } }
-    private let f: () -> A
+    fileprivate let f: () -> A
     
     /**
      Get the value if available, throwing an exception if not.  In the general case this should only be used in subsequent transactions to when the Lazy was obtained.
@@ -28,21 +27,21 @@ public class Lazy<A> {
      Map the lazy value according to the specified function, so the returned Lazy reflects the value of the function applied to the input Lazy's value.
      - Parameter f: Function to apply to the contained value. It must be **referentially transparent**.
     */
-    public final func map<B>(f: A -> B) -> Lazy<B> {
+    public final func map<B>(_ f: @escaping (A) -> B) -> Lazy<B> {
         return Lazy<B>(f: { f(self.get()) })
     }
     
     /**
      Lift a binary function into lazy values, so the returned Lazy reflects the value of the function applied to the input Lazys' values.
     */
-    public final func lift <B,C>(b: Lazy<B>, f: (A,B) -> C) -> Lazy<C> {
+    public final func lift <B,C>(_ b: Lazy<B>, f: @escaping (A,B) -> C) -> Lazy<C> {
         return Lazy<C>(f: { f(self.get(), b.get()) })
     }
     
     /**
      Lift a ternary function into lazy values, so the returned Lazy reflects the value of the function applied to the input Lazys' values.
     */
-    public final func lift<B,C,D>(b: Lazy<B>, c: Lazy<C>, f: (A,B,C) ->D) -> Lazy<D>
+    public final func lift<B,C,D>(_ b: Lazy<B>, c: Lazy<C>, f: @escaping (A,B,C) ->D) -> Lazy<D>
     {
         return Lazy<D>(f: { f(self.get(), b.get(), c.get()) } )
     }
@@ -51,7 +50,7 @@ public class Lazy<A> {
     * Lift a quaternary function into lazy values, so the returned Lazy reflects
     * the value of the function applied to the input Lazys' values.
     */
-    public final func lift<B,C,D,E>(b: Lazy<B>, c: Lazy<C>, d: Lazy<D>, f: (A,B,C,D) -> E) -> Lazy<E> {
+    public final func lift<B,C,D,E>(_ b: Lazy<B>, c: Lazy<C>, d: Lazy<D>, f: @escaping (A,B,C,D) -> E) -> Lazy<E> {
         return Lazy<E>(f: { f(self.get(), b.get(), c.get(), d.get()) } )
     }
 }

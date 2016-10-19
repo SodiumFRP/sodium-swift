@@ -1,5 +1,3 @@
-import Foundation
-
 /**
  # Array-Extension.swift
  
@@ -7,9 +5,10 @@ import Foundation
  - Date: 5/2/16
  - Copyright: © 2016 Whirlygig Ventures. All rights reserved.
  */
+
 extension Array {
-    func indexOf(includedElement: Element -> Bool) -> Int? {
-        for (idx, element) in self.enumerate() {
+    func indexOf(_ includedElement: (Element) -> Bool) -> Int? {
+        for (idx, element) in self.enumerated() {
             if includedElement(element) {
                 return idx
             }
@@ -20,8 +19,8 @@ extension Array {
 
 extension Array where Element : Equatable {
 
-    func indexOf(e: Element) -> Int? {
-        for (idx, element) in self.enumerate() {
+    func indexOf(_ e: Element) -> Int? {
+        for (idx, element) in self.enumerated() {
             if element == e {
                 return idx
             }
@@ -29,9 +28,9 @@ extension Array where Element : Equatable {
         return nil
     }
     
-    mutating func remove(e: Element) -> Bool {
+    mutating func remove(_ e: Element) -> Bool {
         if let idx = self.indexOf(e) {
-            self.removeAtIndex(idx)
+            self.remove(at: idx)
             return true
         }
         return false

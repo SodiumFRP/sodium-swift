@@ -3,7 +3,7 @@ internal class CoalesceHandler<T>
     typealias Action = (Transaction, T) -> Void
     var accum: T?
     
-    func create(f: (T,T) -> T, out: Stream<T>) -> Action {
+    func create(_ f: @escaping (T,T) -> T, out: Stream<T>) -> Action {
         return { /*[weak out]*/ (trans1, a) in
     
             if let acc = self.accum {

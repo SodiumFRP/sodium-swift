@@ -1,6 +1,3 @@
-import Foundation
-
-
 /**
  # PriorityQueue<T>
  
@@ -8,38 +5,39 @@ import Foundation
  - Date: 1/21/16
  - Copyright: © 2016 Whirlygig Ventures. All rights reserved.
 */
+
 class PriorityQueue<T> {
     var contents = [T]()
     var sorted = false
     let comparator: ((T,T)->Bool)
     
     
-    init(comparator: (T,T)->Bool) {
+    init(comparator: @escaping (T,T)->Bool) {
         self.comparator = comparator
     }
     
-    func min(before: (T,T) throws -> Bool) throws -> T? {
-        return try contents.minElement(before)
+    func min(_ before: (T,T) throws -> Bool) throws -> T? {
+        return try contents.min(by: before)
     }
     
-    func sort(cmp: ((T,T) -> Bool)? = nil) {
-        contents.sortInPlace(cmp != nil ? cmp! : comparator)
+    func sort(_ cmp: ((T,T) -> Bool)? = nil) {
+        contents.sort(by: cmp != nil ? cmp! : comparator)
         sorted = true
     }
     
-    func find(predicate: T -> Bool) -> T? {
-        if let idx = contents.indexOf(predicate) {
+    func find(_ predicate: (T) -> Bool) -> T? {
+        if let idx = contents.index(where: predicate) {
             return contents[idx]
         }
         return nil
     }
     
-    func push(o: T) {
+    func push(_ o: T) {
         contents.append(o)
         sorted = false
     }
     
-    func peek(index: Int? = nil) -> T {
+    func peek(_ index: Int? = nil) -> T {
         if !sorted { sort() }
         
         let idx = index ?? contents.count - 1
@@ -92,7 +90,7 @@ class PriorityQueue<T> {
     var count: Int { return contents.count }
     var isEmpty: Bool { return contents.isEmpty }
 
-    func map<U>(f: (T) -> U) -> [U] {
+    func map<U>(_ f: (T) -> U) -> [U] {
         return contents.map(f)
     }
 }

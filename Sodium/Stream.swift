@@ -1,19 +1,20 @@
-import Foundation
-
 /**
  Represents a stream of discrete events/firings.
 
  - Parameter T: The type of values fired by the stream.
  */
-public class Stream<T>
+
+import Foundation
+
+open class Stream<T>
 {
-    public typealias Handler = T -> Void
+    public typealias Handler = (T) -> Void
     typealias Action = (Transaction, T) -> Void
     
     internal let refs: MemReferences?
     internal let node: Node<T>
-    private var disposables: Array<Listener>
-    private var firings: Array<T>
+    fileprivate var disposables: Array<Listener>
+    fileprivate var firings: Array<T>
     internal let keepListenersAlive: IKeepListenersAlive
     internal let lock = NSObject()
     
@@ -23,7 +24,7 @@ public class Stream<T>
      - Parameter T: The type of the values that would be fired by the stream if it did fire values.
      - Returns: A stream that never fires.
     */
-    public static func never() -> Stream<T> { return Stream<T>() }
+    open static func never() -> Stream<T> { return Stream<T>() }
 
     deinit {
         if let r = self.refs { r.release() }
@@ -47,7 +48,7 @@ public class Stream<T>
         self.init(keepListenersAlive: keepListenersAlive, node: Node<T>(rank: 0), disposables: [Listener](), firings: [T](), refs: refs)
     }
 
-    private init(keepListenersAlive: IKeepListenersAlive, node: Node<T>, disposables: [Listener], firings: [T], refs: MemReferences? = nil)
+    fileprivate init(keepListenersAlive: IKeepListenersAlive, node: Node<T>, disposables: [Listener], firings: [T], refs: MemReferences? = nil)
     {
         self.refs = refs
         if let r = self.refs {
@@ -71,7 +72,7 @@ public class Stream<T>
      
      To ensure this `Listener` is disposed as soon as the stream it is listening to is either disposed, pass the returned listener to this stream's `AddCleanup` method.
      */
-    public func listen(refs: MemReferences? = nil, handler: Handler) -> Listener
+    open func listen(_ refs: MemReferences? = nil, handler: @escaping Handler) -> Listener
     {
         var innerListener = self.listenWeak(handler)
         var ls = [Listener]()
@@ -109,14 +110,14 @@ public class Stream<T>
      
      To ensure this `Listener` is disposed as soon as the stream it is listening to is either disposed, pass the returned listener to this stream's `AddCleanup` method.
      */
-    func listenWeak(handler: Handler) -> Listener {
+    func listenWeak(_ handler: @escaping Handler) -> Listener {
         return self.listen(INode.Null, action: {(trans2, a) in
             
             // T could really be U? so make sure we have a value using reflection
             let ref = Mirror(reflecting: a)
             
             // if a is not Optional, just call handler
-            if ref.displayStyle != .Optional {
+            if ref.displayStyle != .optional {
                 handler(a)
             }
             else if ref.children.count > 0 {
@@ -132,7 +133,7 @@ public class Stream<T>
      - Parameter listener: The listener to dispose along with this stream.
      - Returns: A new stream equivalent to this stream which will dispose <paramref name="listener` when it is disposed.
     */
-    public func addCleanup(listener: Listener) -> Stream<T> {
+    open func addCleanup(_ listener: Listener) -> Stream<T> {
         return Transaction.noThrowRun({
             var fsNew = self.disposables
             fsNew.append(listener)
@@ -147,14 +148,18 @@ public class Stream<T>
      - Parameter handler: The handler to execute for values fired by this stream.
      - Returns:
     */
-    public func listenOnce(handler: (T)->Void) -> Listener? {
-        var ls = [Listener]()
+    open func listenOnce(_ handler: @escaping (T)->Void) -> Listener {
         
-        ls.append(self.listen(self.refs) { a in
+        var inner: Listener? = nil
+        let l = Listener(unlisten: { inner = nil}, refs: nil)
+
+        inner = self.listenWeak { a in
             handler(a)
-            ls.first!.unlisten()
-        })
-        return ls.first!
+            inner!.unlisten()
+            inner = nil
+        }
+        
+        return l
     }
 
     /**
@@ -189,11 +194,11 @@ public class Stream<T>
         return tcs.Task
     }
 */
-    internal func listen(target: INode, action: Action, refs: MemReferences? = nil) -> Listener {
+    internal func listen(_ target: INode, action: @escaping Action, refs: MemReferences? = nil) -> Listener {
         return Transaction.apply { trans1 in self.listen(target, trans: trans1, action: action, suppressEarlierFirings: false, refs: refs) }
     }
 
-    internal func listen(target: INode, trans: Transaction, action: Action, suppressEarlierFirings: Bool, refs: MemReferences? = nil) -> Listener {
+    internal func listen(_ target: INode, trans: Transaction, action: @escaping Action, suppressEarlierFirings: Bool, refs: MemReferences? = nil) -> Listener {
         
         let t = self.node.link(action, target: target)
         let nodeTarget = t.1
@@ -227,7 +232,7 @@ public class Stream<T>
 
      - Returns:A stream which fires values transformed by <paramref name="f` for each value fired by this stream.
     */
-    public func map<TResult>(f: (T) -> TResult) -> Stream<TResult>
+    open func map<TResult>(_ f: @escaping (T) -> TResult) -> Stream<TResult>
     {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
         let l = self.listen(out.node, action: { /*[weak out]*/ (trans2, a) in out.send(trans2, a: f(a)) }, refs: self.refs )
@@ -242,7 +247,7 @@ public class Stream<T>
      
      - Returns: A stream which fires the constant value for each value fired by this stream.
      */
-    public func mapTo<TResult>(value: TResult) -> Stream<TResult> {
+    open func mapTo<TResult>(_ value: TResult) -> Stream<TResult> {
         return self.map({ _ in value })
     }
 
@@ -253,7 +258,7 @@ public class Stream<T>
      - Returns: A cell with the specified initial value, that is updated by this stream's values.
      - Remarks: There is an implicit delay state updates caused by stream event firings don't become  visible as the cell's current value as viewed by `Stream<T>.snapshot<0T2, TResult>(Cell<T2>, (T, T2) -> TResult)` until the following transaction. To put this another way, `Stream<T>.snapshot<T2, TResult>(Cell<T2>, (T, T2) -> TResult)` always sees the value of a cell as it was before any state changes from the current transaction.
      */
-    public func hold(initialValue: T)  -> Cell<T> {
+    open func hold(_ initialValue: T)  -> Cell<T> {
         return Transaction.apply{trans in Cell<T>(stream: self, initialValue: initialValue) }
     }
 
@@ -263,15 +268,15 @@ public class Stream<T>
      - Parameter initialValue: The lazily initialized initial value of the cell.
      - Returns: A cell with the specified lazily initialized initial value, that is updated by this stream's values.
      */
-    public func holdLazy(initialValue: () -> T) -> AnyCell<T> {
+    open func holdLazy(_ initialValue: @escaping () -> T) -> AnyCell<T> {
         return Transaction.apply {trans in self.holdLazy(trans, initialValue: initialValue)}
     }
 
-    internal func holdLazy(trans: Transaction, lazy: Lazy<T>) -> AnyCell<T> {
+    internal func holdLazy(_ trans: Transaction, lazy: Lazy<T>) -> AnyCell<T> {
         return AnyCell<T>(LazyCell<T>(stream: self, lazyInitialValue: lazy))
     }
 
-    internal func holdLazy(trans: Transaction, initialValue: () -> T) -> AnyCell<T> {
+    internal func holdLazy(_ trans: Transaction, initialValue: @escaping () -> T) -> AnyCell<T> {
         return AnyCell<T>(LazyCell<T>(stream: self, lazyInitialValue: initialValue))
     }
 
@@ -282,7 +287,7 @@ public class Stream<T>
      - Parameter c: The cell to combine with.
      - Returns:A stream whose events are the values of the cell at the time of the stream event firing.
     */
-    public func snapshot<TResult, C:CellType where C.Element==TResult>(c: C) -> Stream<TResult>
+    open func snapshot<TResult, C:CellType>(_ c: C) -> Stream<TResult> where C.Element==TResult
     {
         return self.snapshot(c, f: { (a, b) in b })
     }
@@ -296,7 +301,7 @@ public class Stream<T>
      - Parameter f: A function to convert the stream value and cell value into a return value.
      - Returns: A stream whose events are the result of the combination using the specified function of the input stream's value and the value of the cell at the time of the stream event firing.
      */
-    public func snapshot<T1, TResult, C1 : CellType where C1.Element==T1>(c: C1, f: (T, T1) -> TResult) -> Stream<TResult> {
+    open func snapshot<T1, TResult, C1 : CellType>(_ c: C1, f: @escaping (T, T1) -> TResult) -> Stream<TResult> where C1.Element==T1 {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
         let l = self.listen(out.node, action: { (trans2, a) in
 
@@ -305,7 +310,7 @@ public class Stream<T>
             let ref = Mirror(reflecting: fa)
             
             // if a is not Optional, just call handler
-            if ref.displayStyle != .Optional {
+            if ref.displayStyle != .optional {
                 out.send(trans2, a: fa)
             }
             else if ref.children.count > 0 {
@@ -329,7 +334,7 @@ public class Stream<T>
      - Parameter f: A function to convert the stream value and cell value into a return value.
      - Returns: A stream whose events are the result of the combination using the specified function of the input stream's value and the value of the cells at the time of the stream event firing.
      */
-    public func snapshot<T1, T2, TResult>(c1: Cell<T1>, c2: Cell<T2>, f: (T, T1, T2) -> TResult) -> Stream<TResult> {
+    open func snapshot<T1, T2, TResult>(_ c1: Cell<T1>, c2: Cell<T2>, f: @escaping (T, T1, T2) -> TResult) -> Stream<TResult> {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
         let l = self.listen(out.node, action: { (trans2, a) in out.send(trans2, a: f(a, c1.sampleNoTransaction(), c2.sampleNoTransaction()))} )
         return out.unsafeAddCleanup(l)
@@ -348,7 +353,7 @@ public class Stream<T>
      - Parameter f: A function to convert the stream value and cell value into a return value.
      - Returns: A stream whose events are the result of the combination using the specified function of the input stream's value and the value of the cells at the time of the stream event firing.
      */
-    public func snapshot<T1, T2, T3, TResult>(c1: Cell<T1>, c2: Cell<T2>, c3: Cell<T3>, f: (T, T1, T2, T3) -> TResult) -> Stream<TResult> {
+    open func snapshot<T1, T2, T3, TResult>(_ c1: Cell<T1>, c2: Cell<T2>, c3: Cell<T3>, f: @escaping (T, T1, T2, T3) -> TResult) -> Stream<TResult> {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
         let l = self.listen(out.node, action: { (trans2, a) in out.send(trans2, a: f(a, c1.sampleNoTransaction(), c2.sampleNoTransaction(), c3.sampleNoTransaction()))} )
         return out.unsafeAddCleanup(l)
@@ -369,7 +374,7 @@ public class Stream<T>
      - Parameter f: A function to convert the stream value and cell value into a return value.
      - Returns: A stream whose events are the result of the combination using the specified function of the input stream's value and the value of the cells at the time of the stream event firing.
      */
-    public func snapshot<T1, T2, T3, T4, TResult>(c1: Cell<T1>, c2: Cell<T2>, c3: Cell<T3>, c4: Cell<T4>, f: (T, T1, T2, T3, T4) -> TResult) -> Stream<TResult> {
+    open func snapshot<T1, T2, T3, T4, TResult>(_ c1: Cell<T1>, c2: Cell<T2>, c3: Cell<T3>, c4: Cell<T4>, f: @escaping (T, T1, T2, T3, T4) -> TResult) -> Stream<TResult> {
         let out = Stream<TResult>(keepListenersAlive: self.keepListenersAlive)
         let l = self.listen(out.node, action: { (trans2, a) in out.send(trans2, a: f(a, c1.sampleNoTransaction(), c2.sampleNoTransaction(), c3.sampleNoTransaction(), c4.sampleNoTransaction()))} )
         return out.unsafeAddCleanup(l)
@@ -386,11 +391,11 @@ public class Stream<T>
 
         The name orElse is used instead of merge to make it clear that care should be taken because stream events can be dropped.
      */
-    public func orElse(s: Stream<T>) -> Stream<T> {
+    open func orElse(_ s: Stream<T>) -> Stream<T> {
         return self.merge(s, f: { (left, right) in left })
     }
 
-    private func merge(s: Stream<T>) -> Stream<T> {
+    fileprivate func merge(_ s: Stream<T>) -> Stream<T> {
         let out = Stream<T>(keepListenersAlive: self.keepListenersAlive)
         let left = Node<T>(rank: 0)
         let right = out.node
@@ -411,11 +416,11 @@ public class Stream<T>
 
      - Remarks: If the events are simultaneous (that is, one event from this stream and one from `s` occurring in the same transaction), combine them into one using the specified combining function so that the returned stream is guaranteed only ever to have one event per transaction.  The event from this stream will appear at the left input of the combining function, and the event from 's` will appear at the right.
      */
-    func merge(s: Stream<T>, f: (T, T) -> T) -> Stream<T> {
+    func merge(_ s: Stream<T>, f: @escaping (T, T) -> T) -> Stream<T> {
         return Transaction.apply { trans in self.merge(s).fold(trans, f: f) }
     }
 
-    func fold(trans1: Transaction, f: (T, T) -> T) -> Stream<T> {
+    func fold(_ trans1: Transaction, f: @escaping (T, T) -> T) -> Stream<T> {
         let out = Stream<T>(keepListenersAlive: self.keepListenersAlive)
         let ch = CoalesceHandler<T>()
         let h = ch.create(f, out: out)
@@ -429,7 +434,7 @@ public class Stream<T>
      - Parameter trans: The transaction to get the last firing from.
      - Returns:A stream containing only the last event firing from the specified transaction.
     */
-    internal func lastFiringOnly(trans: Transaction) -> Stream<T>
+    internal func lastFiringOnly(_ trans: Transaction) -> Stream<T>
     {
         return self.fold(trans, f: { (first, second) in second } )
     }
@@ -440,7 +445,7 @@ public class Stream<T>
      - Parameter predicate: The predicate used to filter the cell.
      - Returns:A stream that only outputs events for which the predicate returns **true**.
     */
-    public func filter(predicate: (T)->Bool) -> Stream<T> {
+    open func filter(_ predicate: @escaping (T)->Bool) -> Stream<T> {
         let out = Stream<T>(keepListenersAlive: self.keepListenersAlive)
         let l = self.listen(out.node, action: { (trans2, a) in
             if (predicate(a))
@@ -457,7 +462,7 @@ public class Stream<T>
      - Parameter c: The cell that acts as a gate.
      - Returns: A stream that only outputs events from the input stream when the specified cell's value is **true**.
     */
-    public func gate<C : CellType where C.Element == Bool>(c: C) -> Stream<T> {
+    open func gate<C : CellType>(_ c: C) -> Stream<T> where C.Element == Bool {
         return self.snapshot(c, f: {(a: T, pred: Bool) -> T? in return pred ? a : nil }).filterOptional()
     }
 
@@ -471,7 +476,7 @@ public class Stream<T>
 
      - Returns: A stream resulting from the transformation of this stream by the Mealy machine.
     */
-    public func collect<TState, TReturn>(initialState: TState , f: (T,TState)->(TReturn,TState)) -> Stream<TReturn> {
+    open func collect<TState, TReturn>(_ initialState: TState , f: @escaping (T,TState)->(TReturn,TState)) -> Stream<TReturn> {
         return self.collectLazy(initialState, f: f)
     }
 
@@ -485,7 +490,7 @@ public class Stream<T>
 
      - Returns: A stream resulting from the transformation of this stream by the Mealy machine.
     */
-    public func collectLazy<TState, TReturn>(@autoclosure(escaping) initialState: () -> TState, f: (T,TState) -> (TReturn, TState)) -> Stream<TReturn> {
+    open func collectLazy<TState, TReturn>( _ initialState: @autoclosure @escaping () -> TState, f: @escaping (T,TState) -> (TReturn, TState)) -> Stream<TReturn> {
         return Transaction.noThrowRun({
             let es = StreamLoop<TState>()
             let s = es.holdLazy(initialState)
@@ -506,10 +511,10 @@ public class Stream<T>
      
      - Returns:A cell holding the accumulated state of this stream.
     */
-    public func accum(initialState: T, f: (T,T) -> T) -> AnyCell<T>
+    open func accum(_ initialState: T, f: @escaping (T,T) -> T) -> AnyCell<T>
     { return self.accumLazy(initialState, f: f) }
 
-    public func accumLazy<TReturn>(@autoclosure(escaping) initialState: () -> TReturn, f: (T,TReturn)->TReturn) -> AnyCell<TReturn> {
+    open func accumLazy<TReturn>( _ initialState: @autoclosure @escaping () -> TReturn, f: @escaping (T,TReturn)->TReturn) -> AnyCell<TReturn> {
         return Transaction.noThrowRun(
         {
             let es = StreamLoop<TReturn>()
@@ -525,7 +530,7 @@ public class Stream<T>
 
      - Returns: A stream that outputs only one value: the next event of the input stream starting from the transaction in which this method was invoked.
     */
-    public func once() -> Stream<T>
+    open func once() -> Stream<T>
     {
         // This is a bit long-winded but it's efficient because it unregisters the listener.
         let out = Stream<T>(keepListenersAlive: self.keepListenersAlive)
@@ -545,7 +550,7 @@ public class Stream<T>
     - Precondition: We are within a transaction, since in the current implementation a transaction locks out all other threads.
     - Precondition: The object on which this is being called was created has not yet been returned from the method where it was created, so it can't be shared between threads.
     */
-    internal func unsafeAddCleanup(cleanup: Listener) -> Stream<T>
+    internal func unsafeAddCleanup(_ cleanup: Listener) -> Stream<T>
     {
         self.disposables.append(cleanup)
         return self
@@ -557,13 +562,13 @@ public class Stream<T>
         }
     }
 
-    internal func unsafeAddCleanup(ls: [Listener]) -> Stream<T>
+    internal func unsafeAddCleanup(_ ls: [Listener]) -> Stream<T>
     {
-        self.disposables.appendContentsOf(ls)
+        self.disposables.append(contentsOf: ls)
         return self
     }
 
-    public func send(trans: Transaction, a: T)
+    open func send(_ trans: Transaction, a: T)
     {
         if (self.firings.isEmpty)
         {
@@ -600,8 +605,8 @@ extension Optional: OptionalType {
     public var asOptional: Wrapped? {return self}
 }
 
-extension SequenceType where Generator.Element: OptionalType {
-    var flatMapped: [Generator.Element.T] {
+extension Sequence where Iterator.Element: OptionalType {
+    var flatMapped: [Iterator.Element.T] {
         return self.flatMap {$0.asOptional}
     }
 }
@@ -629,7 +634,7 @@ extension Stream where T:Equatable {
      */
     public func calm() -> Stream<T> {
         return Stream.filterMaybe(self.collectLazy(nil, f: { (a, lastA) -> (T?, T?) in
-            if (a == lastA) ?? false {
+            if (a == lastA) {
                 return (nil, a) // same, don't collect
             }
             else {
@@ -643,9 +648,9 @@ extension Stream where T:Equatable {
      
      - Returns:A stream that only outputs events which have a different value than the previous event.
      */
-    public func calm(last: T) -> Stream<T> {
+    public func calm(_ last: T) -> Stream<T> {
         return Stream.filterMaybe(self.collectLazy(last, f: { (a, lastA) -> (T?, T?) in
-            if (a == lastA) ?? false {
+            if (a == lastA) {
                 return (nil, a) // same, don't collect
             }
             else {
@@ -689,7 +694,7 @@ extension Stream where T:Equatable {
     ///     A stream that only outputs events that have values, removing the <see cref="IMaybe{T}" /> wrapper, and
     ///     discarding <see cref="Maybe.Nothing{T}()" /> values.
     /// </returns>
-    public static func filterMaybe<T>(s: Stream<T?>) -> Stream<T> {
+    public static func filterMaybe<T>(_ s: Stream<T?>) -> Stream<T> {
         let out = Stream<T>(keepListenersAlive: s.keepListenersAlive)
         let l = s.listen(out.node, action: { (trans2, a) in
             if a != nil { out.send(trans2, a: a!)
@@ -704,13 +709,13 @@ class ListenerImplementation<T> : Listener
 {
     typealias Action = (Transaction, T) -> Void
     // It's essential that we keep the action alive, since the node uses a weak reference.
-    private let action: Action
+    fileprivate let action: Action
     // It's essential that we keep the listener alive while the caller holds the Listener, so that the garbage collector doesn't get triggered.
-    private let stream: Stream<T>
+    fileprivate let stream: Stream<T>
     
-    private let target: NodeTarget<T>
+    fileprivate let target: NodeTarget<T>
     
-    init(stream: Stream<T>, action: Action, target: NodeTarget<T>, refs: MemReferences? = nil) {
+    init(stream: Stream<T>, action: @escaping Action, target: NodeTarget<T>, refs: MemReferences? = nil) {
         self.stream = stream
         self.action = action
         self.target = target
@@ -725,18 +730,18 @@ class ListenerImplementation<T> : Listener
 
 private class KeepListenersAliveImplementation : IKeepListenersAlive
 {
-    private var listeners = Set<Listener>()
-    private var childKeepListenersAliveList = Array<IKeepListenersAlive>()
+    fileprivate var listeners = Set<Listener>()
+    fileprivate var childKeepListenersAliveList = Array<IKeepListenersAlive>()
     
-    func keepListenerAlive(listener: Listener) {
+    func keepListenerAlive(_ listener: Listener) {
         self.listeners.insert(listener)
     }
     
-    func stopKeepingListenerAlive(listener: Listener) {
+    func stopKeepingListenerAlive(_ listener: Listener) {
         self.listeners.remove(listener)
     }
     
-    func use(childKeepListenersAlive: IKeepListenersAlive) {
+    func use(_ childKeepListenersAlive: IKeepListenersAlive) {
         self.childKeepListenersAliveList.append(childKeepListenersAlive)
     }
 }

@@ -1,7 +1,7 @@
-public class CompositeListener : Listener
+open class CompositeListener : Listener
 {
     // TODO: MemReferences
-    private var listeners: [Listener]
+    fileprivate var listeners: [Listener]
 
     public convenience init()
     {
@@ -14,15 +14,15 @@ public class CompositeListener : Listener
         super.init(unlisten: {}, refs: nil)
     }
 
-    public func add(l: Listener) {
+    open func add(_ l: Listener) {
         self.listeners.append(l)
     }
 
-    public func addRange<S : SequenceType where S.Generator.Element == Listener>(ls: S) {
-        self.listeners.appendContentsOf(ls)
+    open func addRange<S : Sequence>(_ ls: S) where S.Iterator.Element == Listener {
+        self.listeners.append(contentsOf: ls)
     }
 
-    public override func unlisten() {
+    open override func unlisten() {
         for l in self.listeners {
             l.unlisten()
         }
