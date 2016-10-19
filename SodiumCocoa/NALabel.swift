@@ -11,19 +11,19 @@ import UIKit
 import SodiumSwift
 import SwiftCommon
 
-public class NALabel : UILabel {
+open class NALabel : UILabel {
     var refs: MemReferences?
 
-    private var hiddenListener: Listener?
-    public var hiddenState = Cell<Bool>(value: false) {
+    fileprivate var hiddenListener: Listener?
+    open var hiddenState = Cell<Bool>(value: false) {
         didSet {
             self.hiddenListener = hiddenState.listen { hidden in
-                gui { self.hidden = hidden }
+                gui { self.isHidden = hidden }
             }
         }
     }
 
-    public var txt: Cell<String> {
+    open var txt: Cell<String> {
         didSet{
             self.l = Operational.updates(txt).listen(self.refs) { txt in
                 gui { self.text = txt }
@@ -32,7 +32,7 @@ public class NALabel : UILabel {
             // Set the text at the end of the transaction so SLabel works
             // with CellLoops.
             Transaction.post{ _ in
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.text = self.txt.sample()
                 }
             }
@@ -46,7 +46,7 @@ public class NALabel : UILabel {
         if let r = self.refs {
             r.addRef()
         }
-        super.init(frame: CGRectZero)
+        super.init(frame: CGRect.zero)
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -54,9 +54,9 @@ public class NALabel : UILabel {
         super.init(coder: aDecoder)
     }
     
-    private var l: Listener?
+    fileprivate var l: Listener?
     
-    public func removeNotify() {
+    open func removeNotify() {
         l?.unlisten();
     }
 }

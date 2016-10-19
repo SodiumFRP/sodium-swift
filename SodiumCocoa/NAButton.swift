@@ -10,36 +10,36 @@ import UIKit
 import SodiumSwift
 import SwiftCommon
 
-public class NAButton : UIButton {
+open class NAButton : UIButton {
     public typealias Title = (String, UIControlState)
-    private let empty : Title = ("", .Normal)
+    fileprivate let empty : Title = ("", UIControlState())
 
-    private var enabledListener: Listener?
-    public var enabledState = AnyCell<Bool>(Cell<Bool>(value: false)) {
+    fileprivate var enabledListener: Listener?
+    open var enabledState = AnyCell<Bool>(Cell<Bool>(value: false)) {
         didSet {
             self.enabledListener = enabledState.listen { enabled in
                 gui {
                     // we set disabled text color in init
-                    self.enabled = enabled
+                    self.isEnabled = enabled
                 }
             }
         }
     }
 
-    private var hiddenListener: Listener?
-    public var hiddenState = AnyCell<Bool>(Cell<Bool>(value: false)) {
+    fileprivate var hiddenListener: Listener?
+    open var hiddenState = AnyCell<Bool>(Cell<Bool>(value: false)) {
         didSet {
             self.hiddenListener = hiddenState.listen { hidden in
-                gui { self.hidden = hidden }
+                gui { self.isHidden = hidden }
             }
         }
     }
 
     let refs: MemReferences?
-    private var txtListener: Listener?
+    fileprivate var txtListener: Listener?
 
-    public let clicked: StreamSink<Unit>
-    public var text: Title {
+    open let clicked: StreamSink<SodiumSwift.Unit>
+    open var text: Title {
         get {
             return textCell.sample()
         }
@@ -51,51 +51,51 @@ public class NAButton : UIButton {
         }
     }
     
-    public var textCell: Cell<Title> {
+    open var textCell: Cell<Title> {
         didSet {
             self.txtListener = Operational.updates(textCell).listen(self.refs) { txt in
-                gui { self.setTitle(txt.0, forState: txt.1) }
+                gui { self.setTitle(txt.0, for: txt.1) }
             }
         }
     }
     
     
     public convenience init(_ txt: Cell<Title>, refs: MemReferences? = nil) {
-        self.init(type: .System, refs: refs)
+        self.init(type: .system, refs: refs)
         
         self.textCell = txt
-        self.layer.borderColor = UIColor.redColor().CGColor
+        self.layer.borderColor = UIColor.red.cgColor
         self.sizeToFit()
-        self.addTarget(self, action: #selector(NAButton.onclicked), forControlEvents: .TouchUpInside)
+        self.addTarget(self, action: #selector(NAButton.onclicked), for: .touchUpInside)
     }
     
     public convenience init(_ text: String, refs: MemReferences? = nil) {
-        self.init(type: .System, refs: refs)
+        self.init(type: .system, refs: refs)
         
         self.titleLabel!.text = text
-        self.layer.borderColor = UIColor.redColor().CGColor
+        self.layer.borderColor = UIColor.red.cgColor
         self.sizeToFit()
-        self.addTarget(self, action: #selector(NAButton.onclicked), forControlEvents: .TouchUpInside)
+        self.addTarget(self, action: #selector(NAButton.onclicked), for: .touchUpInside)
     }
     
     init(type: UIButtonType, refs: MemReferences? = nil) {
-        self.clicked = StreamSink<Unit>(refs: refs)
+        self.clicked = StreamSink<SodiumSwift.Unit>(refs: refs)
         self.refs = refs
         if let r = self.refs {
             r.addRef()
         }
         self.textCell = Cell<Title>(value: empty, refs: refs)
-        super.init(frame: CGRectMake(0,0,10,10))
+        super.init(frame: CGRect(x:0,y:0,width:10,height:10))
     }
     
     required public init?(coder aDecoder: NSCoder) {
         self.refs = nil
-        self.clicked = StreamSink<Unit>(refs: nil)
+        self.clicked = StreamSink<SodiumSwift.Unit>(refs: nil)
         self.textCell = Cell<Title>(value: empty, refs: nil)
         super.init(coder: aDecoder)
      
-        self.setTitleColor(UIColor.lightTextColor(), forState: .Disabled)
-        self.addTarget(self, action: #selector(NAButton.onclicked), forControlEvents: .TouchUpInside)
+        self.setTitleColor(UIColor.lightText, for: .disabled)
+        self.addTarget(self, action: #selector(NAButton.onclicked), for: .touchUpInside)
     }
     
     deinit {

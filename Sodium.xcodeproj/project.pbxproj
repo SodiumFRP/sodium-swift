@@ -49,7 +49,7 @@
 		05E3C6FB1CEFF53900BAFE1D /* SodiumCocoaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E3C6FA1CEFF53900BAFE1D /* SodiumCocoaTests.swift */; };
 		05E3C6FD1CEFF53900BAFE1D /* SodiumCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E3C6DE1CEFBDBB00BAFE1D /* SodiumCocoa.framework */; };
 		05FE4C071CDD0C3B00108F68 /* StreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05FE4C061CDD0C3B00108F68 /* StreamTests.swift */; };
-		A7E3826E82A6EDCA2BFC4686 /* Pods_SodiumCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF1072F8127893469374CBA /* Pods_SodiumCocoa.framework */; };
+		D77EAF7EB73DF715F0FA8FAC /* Pods_SodiumCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A87EBABA0ED0F82B3E13C3 /* Pods_SodiumCocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,9 +140,9 @@
 		05E3C6FA1CEFF53900BAFE1D /* SodiumCocoaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SodiumCocoaTests.swift; sourceTree = "<group>"; };
 		05E3C6FC1CEFF53900BAFE1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		05FE4C061CDD0C3B00108F68 /* StreamTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTests.swift; sourceTree = "<group>"; };
-		31CCD5E8F38D455F21220738 /* Pods-SodiumCocoa.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SodiumCocoa.release.xcconfig"; path = "Pods/Target Support Files/Pods-SodiumCocoa/Pods-SodiumCocoa.release.xcconfig"; sourceTree = "<group>"; };
-		63E99C9A5A36268089D3A2DD /* Pods-SodiumCocoa.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SodiumCocoa.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SodiumCocoa/Pods-SodiumCocoa.debug.xcconfig"; sourceTree = "<group>"; };
-		DAF1072F8127893469374CBA /* Pods_SodiumCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SodiumCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CF28E6F672C95B7D831455D /* Pods-SodiumCocoa.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SodiumCocoa.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SodiumCocoa/Pods-SodiumCocoa.debug.xcconfig"; sourceTree = "<group>"; };
+		37A87EBABA0ED0F82B3E13C3 /* Pods_SodiumCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SodiumCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB7E3A4F1F0503FDF2A7E7F9 /* Pods-SodiumCocoa.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SodiumCocoa.release.xcconfig"; path = "Pods/Target Support Files/Pods-SodiumCocoa/Pods-SodiumCocoa.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,7 +172,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7E3826E82A6EDCA2BFC4686 /* Pods_SodiumCocoa.framework in Frameworks */,
+				D77EAF7EB73DF715F0FA8FAC /* Pods_SodiumCocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,6 +187,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04E8560DD0104DEB01BF3ABE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				37A87EBABA0ED0F82B3E13C3 /* Pods_SodiumCocoa.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		055B91C11CD13D940048BC24 = {
 			isa = PBXGroup;
 			children = (
@@ -196,8 +204,8 @@
 				05E3C6DF1CEFBDBB00BAFE1D /* SodiumCocoa */,
 				05E3C6F91CEFF53900BAFE1D /* SodiumCocoaTests */,
 				055B91CC1CD13D940048BC24 /* Products */,
-				12950B44AC8275B387F6F8FD /* Pods */,
-				63325F39EE246DC86F9AE285 /* Frameworks */,
+				DF8788B2453C7EC178BB1B61 /* Pods */,
+				04E8560DD0104DEB01BF3ABE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -300,21 +308,13 @@
 			path = SodiumCocoaTests;
 			sourceTree = "<group>";
 		};
-		12950B44AC8275B387F6F8FD /* Pods */ = {
+		DF8788B2453C7EC178BB1B61 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				63E99C9A5A36268089D3A2DD /* Pods-SodiumCocoa.debug.xcconfig */,
-				31CCD5E8F38D455F21220738 /* Pods-SodiumCocoa.release.xcconfig */,
+				1CF28E6F672C95B7D831455D /* Pods-SodiumCocoa.debug.xcconfig */,
+				EB7E3A4F1F0503FDF2A7E7F9 /* Pods-SodiumCocoa.release.xcconfig */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		63325F39EE246DC86F9AE285 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				DAF1072F8127893469374CBA /* Pods_SodiumCocoa.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -397,12 +397,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 05E3C6E31CEFBDBB00BAFE1D /* Build configuration list for PBXNativeTarget "SodiumCocoa" */;
 			buildPhases = (
-				CD098C226D40645B23B75A2C /* Check Pods Manifest.lock */,
+				C18EC22BFF4852CF21DBF85D /* [CP] Check Pods Manifest.lock */,
 				05E3C6D91CEFBDBB00BAFE1D /* Sources */,
 				05E3C6DA1CEFBDBB00BAFE1D /* Frameworks */,
 				05E3C6DB1CEFBDBB00BAFE1D /* Headers */,
 				05E3C6DC1CEFBDBB00BAFE1D /* Resources */,
-				3CB51E7CFC464F200DA91499 /* Copy Pods Resources */,
+				3133F6987D96F78835A0499C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -458,6 +458,7 @@
 					05E3C6DD1CEFBDBB00BAFE1D = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = ND6GWCAG35;
+						LastSwiftMigration = 0800;
 					};
 					05E3C6F71CEFF53900BAFE1D = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -530,14 +531,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3CB51E7CFC464F200DA91499 /* Copy Pods Resources */ = {
+		3133F6987D96F78835A0499C /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -545,19 +546,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SodiumCocoa/Pods-SodiumCocoa-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CD098C226D40645B23B75A2C /* Check Pods Manifest.lock */ = {
+		C18EC22BFF4852CF21DBF85D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -874,7 +875,7 @@
 		};
 		05E3C6E41CEFBDBB00BAFE1D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 63E99C9A5A36268089D3A2DD /* Pods-SodiumCocoa.debug.xcconfig */;
+			baseConfigurationReference = 1CF28E6F672C95B7D831455D /* Pods-SodiumCocoa.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -893,12 +894,13 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		05E3C6E51CEFBDBB00BAFE1D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 31CCD5E8F38D455F21220738 /* Pods-SodiumCocoa.release.xcconfig */;
+			baseConfigurationReference = EB7E3A4F1F0503FDF2A7E7F9 /* Pods-SodiumCocoa.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -916,6 +918,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ventures.whirlygig.sodium.cocoa.SodiumCocoa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

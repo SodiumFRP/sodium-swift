@@ -10,14 +10,14 @@ import Foundation
 import SodiumSwift
 import SwiftCommon
 
-public class NATableViewCell : UITableViewCell {
+open class NATableViewCell : UITableViewCell {
     
-    private var hiddenListener: Listener?
-    public var hiddenState: AnyCell<Bool> = AnyCell(Cell<Bool>(value: false)) {
+    fileprivate var hiddenListener: Listener?
+    open var hiddenState: AnyCell<Bool> = AnyCell(Cell<Bool>(value: false)) {
         didSet {
             self.hiddenListener = hiddenState.listen { hidden in
                 gui {
-                    self.hidden = hidden
+                    self.isHidden = hidden
                 }
             }
         }
